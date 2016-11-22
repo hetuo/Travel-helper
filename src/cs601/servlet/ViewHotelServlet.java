@@ -1,10 +1,9 @@
-package cs601.Server;
+package cs601.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.TreeSet;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -12,7 +11,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import cs601.database.DatabaseHandler;
 import cs601.database.Status;
+import cs601.hotelapp.HotelWithRating;
 
+@SuppressWarnings("serial")
 public class ViewHotelServlet extends BaseServlet {
 	
 	private static final DatabaseHandler dbhandler = DatabaseHandler.getInstance();
@@ -20,35 +21,20 @@ public class ViewHotelServlet extends BaseServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 		throws ServletException, IOException{
-		//String username = (String)request.getSession().getAttribute("user");
-		//SqlResult sr = new SqlResult();
 		if (request.getSession().getAttribute("user") == null)
 			response.sendRedirect("/login");
-		ArrayList<HotelWithRating> list = new ArrayList<HotelWithRating>();
-		Status status = dbhandler.viewHotel(list);
-		System.out.println("XXXXXX" + list.size());
-		/*try {
-			if (sr.getTest() == 1)
-				System.out.println("HTTTT");
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/
+		//ArrayList<HotelWithRating> list = new ArrayList<HotelWithRating>();
+		TreeSet<HotelWithRating> list = new TreeSet<HotelWithRating>();
+		dbhandler.viewHotel(list);
 		PrintWriter out = response.getWriter();
-		//out.println("<p>hello world</p>");
-		displayForm(out, list); 
-		//finishResponse(response);
-		
+		displayForm(out, list); 		
 	}
 	
-	private void displayForm(PrintWriter out, ArrayList<HotelWithRating> list)
+	private void displayForm(PrintWriter out, TreeSet<HotelWithRating> list)
 	{
-		
-		
-		
+		assert out != null;			
 		out.println("<table style=\"width:100%\">");
-		out.println("<tr><td>Name</td><td>Street</td><td>City</td><td>Rating</td>");
-				
+		out.println("<tr><td>Name</td><td>Street</td><td>City</td><td>Rating</td>");				
 		for (HotelWithRating hotel : list)
 		{
 			out.println("<tr>");
@@ -59,8 +45,7 @@ public class ViewHotelServlet extends BaseServlet {
 			out.println("<td>"+"<a href=/addreview?hotelid="+hotel.getHotel().getHotelId()+">Add review</td>");
 			out.println("</tr>");
 		}
-		out.println("</table>");
-		
+		out.println("</table>");		
 	}
 
 }

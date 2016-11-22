@@ -1,13 +1,8 @@
-package cs601.Server;
+package cs601.driver;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
-import org.eclipse.jetty.servlet.ServletHandler;
-
-import cs601.hotelapp.ThreadSafeHotelData;
-
+import cs601.servlet.*;
 
 /**
  * Class JettyHttpServer - a class to create jetty server
@@ -16,8 +11,6 @@ import cs601.hotelapp.ThreadSafeHotelData;
 public class JettyHttpServer {
 	
 	public static final int PORT = 8080;
-	//private Utilities utility;
-	Logger log = LogManager.getRootLogger();
 		
 	/**
 	 * A method to start the Jetty server

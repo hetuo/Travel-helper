@@ -1,8 +1,8 @@
-package cs601.Server;
+package cs601.hotelapp;
 
 import cs601.hotelapp.Hotel;
 
-public class HotelWithRating {
+public class HotelWithRating implements Comparable<HotelWithRating>{
 
 	private Hotel hotel;
 	private float rating;
@@ -22,5 +22,11 @@ public class HotelWithRating {
 	public float getRating()
 	{
 		return this.rating;
+	}
+	
+	@Override
+	public int compareTo(HotelWithRating H)
+	{
+		return hotel.getHotelName().compareTo(H.getHotel().getHotelName());
 	}
 }

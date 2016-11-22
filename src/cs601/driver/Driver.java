@@ -1,4 +1,4 @@
-package cs601.Server;
+package cs601.driver;
 
 import java.nio.file.Paths;
 
@@ -11,9 +11,9 @@ public class Driver {
 	{
 		ThreadSafeHotelData hdata = new ThreadSafeHotelData();
 		HotelDataBuilder builder = new HotelDataBuilder(hdata);
-		builder.loadHotelInfo("input/hotels200.json");
-		builder.loadReviews(Paths.get("input/reviews"));
-		builder.shutdown();
+		//builder.loadHotelInfo("input/hotels200.json");
+		//builder.loadReviews(Paths.get("input/reviews"));
+		//builder.shutdown();
 		JettyHttpServer jetty = new JettyHttpServer();
 		jetty.startServer();
 	}

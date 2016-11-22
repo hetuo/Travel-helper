@@ -1,4 +1,4 @@
-package cs601.Server;
+package cs601.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -28,7 +28,7 @@ import cs601.database.Status;
 @SuppressWarnings("serial")
 public class BaseServlet extends HttpServlet {
 
-	protected void prepareResponse(String title, HttpServletResponse response) {
+/*	protected void prepareResponse(String title, HttpServletResponse response) {
 		try {
 			PrintWriter writer = response.getWriter();
 
@@ -71,14 +71,14 @@ public class BaseServlet extends HttpServlet {
 		DateFormat dateFormat = new SimpleDateFormat(format);
 		return dateFormat.format(Calendar.getInstance().getTime());
 	}
-
+*/
 	/**
 	 * Return a cookie map from the cookies in the request
 	 * 
 	 * @param request
 	 * @return
 	 */
-	protected Map<String, String> getCookieMap(HttpServletRequest request) {
+/*	protected Map<String, String> getCookieMap(HttpServletRequest request) {
 		HashMap<String, String> map = new HashMap<String, String>();
 
 		Cookie[] cookies = request.getCookies();
@@ -91,14 +91,14 @@ public class BaseServlet extends HttpServlet {
 
 		return map;
 	}
-
+*/
 	/**
 	 * Clear cookies
 	 * 
 	 * @param request
 	 * @param response
 	 */
-	protected void clearCookies(HttpServletRequest request, HttpServletResponse response) {
+/*	protected void clearCookies(HttpServletRequest request, HttpServletResponse response) {
 		Cookie[] cookies = request.getCookies();
 
 		if (cookies == null) {
@@ -117,7 +117,7 @@ public class BaseServlet extends HttpServlet {
 		cookie.setMaxAge(0);
 		response.addCookie(cookie);
 	}
-
+*/
 	protected String getStatusMessage(String errorName) {
 		Status status = null;
 

@@ -1,4 +1,4 @@
-package cs601.Server;
+package cs601.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -29,21 +29,15 @@ public class LoginServlet extends BaseServlet{
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 		throws ServletException, IOException{
-		prepareResponse("Login", response);
-
 		PrintWriter out = response.getWriter();
 		if (request.getSession().getAttribute("user") != null)
 			response.sendRedirect("/main");
-		// error will not be null if we were forwarded her from the post method where something went wrong
 		String error = request.getParameter("error");
 		if(error != null) {
 			String errorMessage = getStatusMessage(error);
 			out.println("<p style=\"color: red;\">" + errorMessage + "</p>");
 		}
-
-		displayForm(out); 
-		finishResponse(response);
-		
+		displayForm(out); 		
 	}
 	
 	/**Override the doPost method to process the request from client about review information
@@ -51,24 +45,16 @@ public class LoginServlet extends BaseServlet{
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 	throws ServletException, IOException{
-		prepareResponse("Register New User", response);
-
-		// Get data from the textfields of the html form
 		String newuser = request.getParameter("user");
 		String newpass = request.getParameter("pass");
-		// sanitize user input to avoid XSS attacks:
 		newuser = StringEscapeUtils.escapeHtml4(newuser);
 		newpass = StringEscapeUtils.escapeHtml4(newpass);
 		
 		// add user's info to the database 
 		Status status = dbhandler.userLogin(newuser, newpass);
-		
-
 		if(status == Status.OK) { // registration was successful
 			request.getSession().setAttribute("user", newuser);
-			String url = "/main";
-			url = response.encodeRedirectURL(url);
-			response.sendRedirect(url);
+			response.sendRedirect("/main");
 		}
 		else { // if something went wrong
 			String url = "/login?error=" + status.name();

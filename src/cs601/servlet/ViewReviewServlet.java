@@ -1,8 +1,9 @@
-package cs601.Server;
+package cs601.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.TreeSet;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -12,6 +13,7 @@ import cs601.database.DatabaseHandler;
 import cs601.database.Status;
 import cs601.hotelapp.Review;
 
+@SuppressWarnings("serial")
 public class ViewReviewServlet extends BaseServlet{
 	
 	private static final DatabaseHandler dbhandler = DatabaseHandler.getInstance();
@@ -19,8 +21,6 @@ public class ViewReviewServlet extends BaseServlet{
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 		throws ServletException, IOException{
-		//String username = (String)request.getSession().getAttribute("user");
-		//SqlResult sr = new SqlResult();
 		PrintWriter out = response.getWriter();
 		if (request.getSession().getAttribute("user") == null)
 			response.sendRedirect("/login");
@@ -28,33 +28,18 @@ public class ViewReviewServlet extends BaseServlet{
 		if (null == hotelid){
 			out.println("<p>Invalid hotel id</p>");
 			return;
-		}
-		
-		ArrayList<Review> list = new ArrayList<Review>();
-		Status status = dbhandler.viewReview(hotelid, list);
-		System.out.println("XXXXXX" + list.size());
-		/*try {
-			if (sr.getTest() == 1)
-				System.out.println("HTTTT");
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/
-		
-		//out.println("<p>hello world</p>");
-		displayForm(out, list); 
-		//finishResponse(response);		
+		}		
+		TreeSet<Review> list = new TreeSet<Review>();
+		dbhandler.viewReview(hotelid, list);
+		displayForm(out, list); 	
 	}
 	
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 		throws ServletException, IOException{
-		String user = (String)request.getSession().getAttribute("user");
-		String text = (String)request.getParameter("comment");
-		//Status status = dbhandler.addReview(user, text);
 	}
 	
-	private void displayForm(PrintWriter out, ArrayList<Review> list)
+	private void displayForm(PrintWriter out, TreeSet<Review> list)
 	{	
 		out.println("<table style=\"width:100%\">");
 		out.println("<tr><td>Title</td><td>Content</td><td>User</td><td>Date</td><td>IsRecom</td>"

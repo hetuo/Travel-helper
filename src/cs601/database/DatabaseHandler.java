@@ -20,8 +20,7 @@ import java.util.TreeSet;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import cs601.Server.HotelWithRating;
-import cs601.Server.SqlResult;
+import cs601.hotelapp.HotelWithRating;
 import cs601.hotelapp.Address;
 import cs601.hotelapp.Hotel;
 import cs601.hotelapp.Review;
@@ -40,7 +39,6 @@ public class DatabaseHandler {
 
 	/** Used to determine if login_users table exists. */
 	private static final String TABLES_SQL = "SHOW TABLES LIKE 'login_users';";
-	private static final String USER_ID_SQL = "select id from users where username = ?;";
 	private static final String ADD_REVIEW_SQL = "insert into review (reviewid, hotelid, title, "
 			+ "text, username, date, recom, rating) values(?, ?, ?, ?, ?, ?, ?, ?)";
 	private static final String LOGIN_SQL = "select passwd, usersalt from users where username = ?;";
@@ -231,33 +229,24 @@ public class DatabaseHandler {
 	{
 		Status status = Status.ERROR;
 		try (Connection connection = db.getConnection();) {
-			try (PreparedStatement statement = connection.prepareStatement(USER_ID_SQL);){
-				statement.setString(1, username);
-				//System.out.println(hotelid);
-				ResultSet rs = statement.executeQuery();
-				int userid = 0;
-				if (rs.next())
-					userid = rs.getInt(1);
+			try (PreparedStatement statement = connection.prepareStatement(ADD_REVIEW_SQL);){
 				byte[] saltBytes = new byte[12];
 				random.nextBytes(saltBytes);
-				String reviewid = encodeHex(saltBytes, 24);
-				PreparedStatement statement2 = connection.prepareStatement(ADD_REVIEW_SQL);
-				statement2.setString(1, reviewid);
+				String reviewid = encodeHex(saltBytes, 24);				
+				statement.setString(1, reviewid);
 				//statement2.setInt(2, userid);
-				statement2.setString(2, hotelid);
-				statement2.setString(3, title);
-				statement2.setString(4, text);
-				statement2.setString(5, username);
+				statement.setString(2, hotelid);
+				statement.setString(3, title);
+				statement.setString(4, text);
+				statement.setString(5, username);
 				SimpleDateFormat df = new SimpleDateFormat("yyyy-mm-dd");
-				statement2.setString(6, df.format(new Date()));
+				statement.setString(6, df.format(new Date()));
 				if (recom.equals("yes"))
-					statement2.setBoolean(7, true);
+					statement.setBoolean(7, true);
 				else
-					statement2.setBoolean(7, false);
-				statement2.setInt(8, Integer.parseInt(rating));
-				statement2.executeUpdate();
-				//	System.out.println("XX" + rs.getString(9));
-				//sr.setResultSet(rs);
+					statement.setBoolean(7, false);
+				statement.setInt(8, Integer.parseInt(rating));
+				statement.executeUpdate();
 				status = Status.OK;
 			}
 			
@@ -268,7 +257,7 @@ public class DatabaseHandler {
 		return status;
 	}
 	
-	public Status viewReview(String hotelid, ArrayList<Review> list)
+	public Status viewReview(String hotelid, TreeSet<Review> list)
 	{
 		Status status = Status.ERROR;
 		try (Connection connection = db.getConnection();) {
@@ -296,16 +285,12 @@ public class DatabaseHandler {
 		return status;
 	}
 	
-	public Status viewHotel(ArrayList<HotelWithRating> list)
+	public Status viewHotel(TreeSet<HotelWithRating> list)
 	{
 		Status status = Status.ERROR;
 		try (Connection connection = db.getConnection();) {
 			try (PreparedStatement statement = connection.prepareStatement(VIEWHOTEL_SQL);){
-				//statement.setString(1, user);
-				
 				ResultSet rs = statement.executeQuery();
-				//if (rs.next())
-				//	System.out.println("xxxxxxxxxxxxxxxxxxxxxxx");
 				while (rs.next())
 				{
 					Hotel hotel = new Hotel(rs.getString(1), rs.getString(2), new Address(rs.getString(3),
@@ -313,8 +298,6 @@ public class DatabaseHandler {
 							 rs.getString(6));
 					list.add(new HotelWithRating(hotel,rs.getFloat(9)));
 				}
-				//	System.out.println("XX" + rs.getString(9));
-				//sr.setResultSet(rs);
 				status = Status.OK;
 			}
 			
@@ -380,30 +363,22 @@ public class DatabaseHandler {
 	public Status registerUser(String newuser, String newpass) {
 		Status status = Status.ERROR;
 		System.out.println("Registering " + newuser + ".");
-
 		// make sure we have non-null and non-emtpy values for login
 		if (isBlank(newuser) || isBlank(newpass)) {
 			status = Status.INVALID_LOGIN;
 			System.out.println("Invalid regiser info");
 			return status;
 		}
-
 		// try to connect to database and test for duplicate user
 		try (Connection connection = db.getConnection();) {
 			status = duplicateUser(connection, newuser);
-
 			// if okay so far, try to insert new user
 			if (status == Status.OK) {
 				// generate salt
 				byte[] saltBytes = new byte[16];
 				random.nextBytes(saltBytes);
-
 				String usersalt = encodeHex(saltBytes, 32); // hash salt
-				String passhash = getHash(newpass, usersalt); // combine
-																// password and
-																// salt and hash
-																// again
-
+				String passhash = getHash(newpass, usersalt); 
 				// add user info to the database table
 				try (PreparedStatement statement = connection.prepareStatement(REGISTER_SQL);) {
 					statement.setString(1, newuser);
@@ -418,12 +393,11 @@ public class DatabaseHandler {
 			status = Status.CONNECTION_FAILED;
 			System.out.println("Error while connecting to the database: " + ex);
 		}
-
 		return status;
 	}
 
 	
-	public Status createHotelTable(ThreadSafeHotelData hdata)
+/*	public Status createHotelTable(ThreadSafeHotelData hdata)
 	{
 		Status status = Status.ERROR;
 		Map<String, Hotel> hotelMap = hdata.getHotelMap();
@@ -492,7 +466,7 @@ public class DatabaseHandler {
 
 		return status;
 	}
-	
+*/	
 	
 	/**
 	 * Gets the salt for a specific user.
