@@ -41,8 +41,8 @@ public class DatabaseHandler {
 	/** Used to determine if login_users table exists. */
 	private static final String TABLES_SQL = "SHOW TABLES LIKE 'login_users';";
 	private static final String USER_ID_SQL = "select id from users where username = ?;";
-	private static final String ADD_REVIEW_SQL = "insert into review (reviewid, userid, hotelid, title, "
-			+ "text, username, date, recom, rating) values(?, ?, ?, ?, ?, ?, ?, ?, ?)";
+	private static final String ADD_REVIEW_SQL = "insert into review (reviewid, hotelid, title, "
+			+ "text, username, date, recom, rating) values(?, ?, ?, ?, ?, ?, ?, ?)";
 	private static final String LOGIN_SQL = "select passwd, usersalt from users where username = ?;";
 	private static final String VIEWHOTEL_SQL = "select hotel.*, avg(rating) as rate from hotel"
 			+ " left join review on hotel.id = review.hotelid group by hotel.id;";
@@ -243,18 +243,18 @@ public class DatabaseHandler {
 				String reviewid = encodeHex(saltBytes, 24);
 				PreparedStatement statement2 = connection.prepareStatement(ADD_REVIEW_SQL);
 				statement2.setString(1, reviewid);
-				statement2.setInt(2, userid);
-				statement2.setString(3, hotelid);
-				statement2.setString(4, title);
-				statement2.setString(5, text);
-				statement2.setString(6, username);
+				//statement2.setInt(2, userid);
+				statement2.setString(2, hotelid);
+				statement2.setString(3, title);
+				statement2.setString(4, text);
+				statement2.setString(5, username);
 				SimpleDateFormat df = new SimpleDateFormat("yyyy-mm-dd");
-				statement2.setString(7, df.format(new Date()));
+				statement2.setString(6, df.format(new Date()));
 				if (recom.equals("yes"))
-					statement2.setBoolean(8, true);
+					statement2.setBoolean(7, true);
 				else
-					statement2.setBoolean(8, false);
-				statement2.setInt(9, Integer.parseInt(rating));
+					statement2.setBoolean(7, false);
+				statement2.setInt(8, Integer.parseInt(rating));
 				statement2.executeUpdate();
 				//	System.out.println("XX" + rs.getString(9));
 				//sr.setResultSet(rs);
@@ -280,8 +280,8 @@ public class DatabaseHandler {
 					System.out.println("xxxxxxxxxxxxxxxxxxxxxxx");*/
 				while (rs.next())
 				{
-					Review review = new Review(rs.getString(1), rs.getString(3), rs.getString(4), 
-							rs.getString(5), rs.getString(6), rs.getString(7), rs.getBoolean(8), rs.getInt(9));
+					Review review = new Review(rs.getString(1), rs.getString(2), rs.getString(3), 
+							rs.getString(4), rs.getString(5), rs.getString(6), rs.getBoolean(7), rs.getInt(8));
 					list.add(review);
 				}
 				//	System.out.println("XX" + rs.getString(9));
@@ -423,7 +423,7 @@ public class DatabaseHandler {
 	}
 
 	
-	/*public Status createHotelTable(ThreadSafeHotelData hdata)
+	public Status createHotelTable(ThreadSafeHotelData hdata)
 	{
 		Status status = Status.ERROR;
 		Map<String, Hotel> hotelMap = hdata.getHotelMap();
@@ -453,9 +453,9 @@ public class DatabaseHandler {
 		}
 
 		return status;
-	}*/
+	}
 	
-	/*public Status createReviewTable(ThreadSafeHotelData hdata)
+	public Status createReviewTable(ThreadSafeHotelData hdata)
 	{
 		Status status = Status.ERROR;
 		//Map<String, Hotel> hotelMap = hdata.getHotelMap();
@@ -491,7 +491,7 @@ public class DatabaseHandler {
 		}
 
 		return status;
-	}*/
+	}
 	
 	
 	/**

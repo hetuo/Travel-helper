@@ -18,7 +18,7 @@ public class driver {
 		builder.loadReviews(Paths.get("input/reviews"));
 		builder.shutdown();
 		//Status status = dbhandler.createHotelTable(hdata);
-		//dbhandler.createReviewTable(hdata);
+		dbhandler.createReviewTable(hdata);
 	}*/
 
 }

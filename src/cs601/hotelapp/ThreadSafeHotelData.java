@@ -596,13 +596,13 @@ public class ThreadSafeHotelData{
 		}
 	}	
 	
-/*	public Map<String, Hotel> getHotelMap()
+	public Map<String, Hotel> getHotelMap()
 	{
 		return hotelDataMap;
 	}
 	public Map<String, TreeSet<Review>> getReviewMap()
 	{
 		return reviewMap;
-	}*/
+	}
 	
 }

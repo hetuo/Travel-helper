@@ -64,9 +64,9 @@ public class DatabaseConnector {
 		login = new Properties();
 		login.put("user", config.getProperty("username"));
 		login.put("password", config.getProperty("password"));
-		login.put("useUnicode", "true");
-		login.put("useServerPrepStmts", "false");
-		login.put("characterEncoding", "UTF-8");
+		//login.put("useUnicode", "true");
+		//login.put("useServerPrepStmts", "false");
+		//login.put("characterEncoding", "UTF-8");
 	}
 
 	/**
