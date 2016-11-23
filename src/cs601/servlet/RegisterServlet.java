@@ -51,7 +51,7 @@ public class RegisterServlet extends BaseServlet{
 		
 
 		if(status == Status.OK) { // registration was successful
-			response.getWriter().println("Registered! Database updated.");
+			response.getWriter().println("<p>Registered! Database updated.</p>");
 			response.getWriter().println("<a href=/login>Click here to login</a>");
 		}
 		else { // if something went wrong

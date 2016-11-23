@@ -40,7 +40,8 @@ public class ViewHotelServlet extends BaseServlet {
 	 **/
 	private void displayForm(PrintWriter out, TreeSet<HotelWithRating> list)
 	{
-		assert out != null;			
+		assert out != null;	
+		out.println("<a href=/main>Click here back to home</a>");
 		out.println("<table style=\"width:100%\">");
 		out.println("<tr><td>Name</td><td>Street</td><td>City</td><td>Rating</td>");				
 		for (HotelWithRating hotel : list)
