@@ -11,11 +11,18 @@ import javax.servlet.http.HttpServletResponse;
 import cs601.database.DatabaseHandler;
 import cs601.database.Status;
 
+/**
+ * Class AddReviewServlet - a servlet class that handler the request from web about add review
+ * @author TuoHe
+ */
 @SuppressWarnings("serial")
 public class AddReviewServlet extends BaseServlet{
 	
 	private static final DatabaseHandler dbhandler = DatabaseHandler.getInstance();
 	private String hotelid = null;
+	
+	/**Override the doGet method to process the request from client about add review
+	 */
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException{
@@ -26,6 +33,8 @@ public class AddReviewServlet extends BaseServlet{
 			displayForm(out); 			
 		}
 	
+	/**Override the doPost method to process the request from client about add review
+	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 		throws ServletException, IOException{
 		String username = (String)request.getSession().getAttribute("user");
@@ -40,7 +49,11 @@ public class AddReviewServlet extends BaseServlet{
 		out.println("<p>Add review successfully!</p><br>");
 		out.println("<a href=/viewhotel>Click here back to view hotel</a>");
 	}
-		
+	
+	/** Writes and HTML form that shows two textfields and a button to the PrintWriter 
+	 * @param out
+	 * 		response 
+	 * */
 	private void displayForm(PrintWriter out)
 	{
 		out.println("<form action=\"/addreview\" method=\"post\">"); // the form will be processed by POST

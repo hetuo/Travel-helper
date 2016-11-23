@@ -118,6 +118,14 @@ public class BaseServlet extends HttpServlet {
 		response.addCookie(cookie);
 	}
 */
+	
+	/**
+	 * Return the error message by error name
+	 * @param errorName
+	 * 		error name
+	 * @return
+	 * 		error message
+	 */
 	protected String getStatusMessage(String errorName) {
 		Status status = null;
 
@@ -130,6 +138,13 @@ public class BaseServlet extends HttpServlet {
 		return status.toString();
 	}
 
+	/**
+	 * Return the error message by error code
+	 * @param code
+	 * 		error code
+	 * @return
+	 * 		error message
+	 */
 	protected String getStatusMessage(int code) {
 		Status status = null;
 

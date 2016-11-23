@@ -7,10 +7,16 @@ import cs601.database.Status;
 import cs601.hotelapp.HotelDataBuilder;
 import cs601.hotelapp.ThreadSafeHotelData;
 
+
+/**
+ * Class driver - create reviewtable hoteltable and userstable by HashMap
+ * @author tuo
+ *
+ */
 public class driver {
 	
-	private static final DatabaseHandler dbhandler = DatabaseHandler.getInstance();
-	/*public static void main(String[] args)
+	/*private static final DatabaseHandler dbhandler = DatabaseHandler.getInstance();
+	public static void main(String[] args)
 	{
 		ThreadSafeHotelData hdata = new ThreadSafeHotelData();
 		HotelDataBuilder builder = new HotelDataBuilder(hdata);
@@ -18,7 +24,7 @@ public class driver {
 		builder.loadReviews(Paths.get("input/reviews"));
 		builder.shutdown();
 		//Status status = dbhandler.createHotelTable(hdata);
-		dbhandler.createReviewTable(hdata);
+		dbhandler.createUserTable(hdata);
 	}*/
 
 }

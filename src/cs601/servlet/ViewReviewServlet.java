@@ -13,11 +13,18 @@ import cs601.database.DatabaseHandler;
 import cs601.database.Status;
 import cs601.hotelapp.Review;
 
+
+/**
+ * Class ViewReviewServlet - a servlet class that handler the request from web about view review
+ * @author TuoHe
+ */
 @SuppressWarnings("serial")
 public class ViewReviewServlet extends BaseServlet{
 	
 	private static final DatabaseHandler dbhandler = DatabaseHandler.getInstance();
 	
+	/**Override the doGet method to process the request from client about view reivew
+	 */
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 		throws ServletException, IOException{
@@ -34,11 +41,13 @@ public class ViewReviewServlet extends BaseServlet{
 		displayForm(out, list); 	
 	}
 	
-	@Override
+	/*@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 		throws ServletException, IOException{
-	}
+	}*/
 	
+	/** Writes and HTML form that shows reviews
+	 **/
 	private void displayForm(PrintWriter out, TreeSet<Review> list)
 	{	
 		out.println("<table style=\"width:100%\">");

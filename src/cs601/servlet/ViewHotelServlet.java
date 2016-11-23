@@ -13,11 +13,17 @@ import cs601.database.DatabaseHandler;
 import cs601.database.Status;
 import cs601.hotelapp.HotelWithRating;
 
+/**
+ * Class ViewReviewServlet - a servlet class that handler the request from web about view hotel
+ * @author TuoHe
+ */
 @SuppressWarnings("serial")
 public class ViewHotelServlet extends BaseServlet {
 	
 	private static final DatabaseHandler dbhandler = DatabaseHandler.getInstance();
 	
+	/**Override the doGet method to process the request from client about view hotel
+	 */
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 		throws ServletException, IOException{
@@ -30,6 +36,8 @@ public class ViewHotelServlet extends BaseServlet {
 		displayForm(out, list); 		
 	}
 	
+	/** Writes and HTML form that shows hotels
+	 **/
 	private void displayForm(PrintWriter out, TreeSet<HotelWithRating> list)
 	{
 		assert out != null;			

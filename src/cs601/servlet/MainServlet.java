@@ -12,11 +12,17 @@ import org.apache.commons.lang3.StringEscapeUtils;
 import cs601.database.DatabaseHandler;
 import cs601.database.Status;
 
+/**
+ * Class MainServlet - a servlet class that handler the request from web after login
+ * @author TuoHe
+ */
 @SuppressWarnings("serial")
 public class MainServlet extends BaseServlet{
 	
 	private static final DatabaseHandler dbhandler = DatabaseHandler.getInstance();
 	
+	/**Override the doGet method to process the request from client after login
+	 */
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 		throws ServletException, IOException{
@@ -34,7 +40,7 @@ public class MainServlet extends BaseServlet{
 	throws ServletException, IOException{
 	}
 	
-	/** Writes and HTML form that shows two textfields and a button to the PrintWriter */
+	/** Writes and HTML form that shows 2 links to the PrintWriter */
 	private void displayForm(PrintWriter out) {
 		assert out != null;	
 		out.println("<a href=/logout>Logout</a>");

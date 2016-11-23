@@ -53,12 +53,15 @@ public class DatabaseHandler {
 	/** Used to insert a new user's info into the login_users table */
 	private static final String REGISTER_SQL = "INSERT INTO users (username, passwd, usersalt) "
 			+ "VALUES (?, ?, ?);";
-	
+	/** Used to store all tables in json to database.*/
 	private static final String CREATE_HOTEL_TABLE_SQL = "insert into hotel (id, name, street, city, state, "
 			+ "country, longitude, latitude) values(?, ?, ?, ?, ?, ?, ?, ?)";
-	
+	/** Used to store all reviews in json to database.*/
 	private static final String CREATE_REVIEW_TABLE_SQL = "insert into review (reviewid, hotelid, title, "
 			+ "text, username, date, recom, rating) values(?, ?, ?, ?, ?, ?, ?, ?)";
+	/** Used to store all users in json to database.*/
+	private static final String CREATE_USER_TABLE_SQL = "insert into users(username, passwd, usersalt)"
+			+ "values(?, ?, ?);";
 	
 	/** Used to determine if a username already exists. */
 	private static final String USER_SQL = "SELECT username FROM users WHERE username = ?";
@@ -225,6 +228,23 @@ public class DatabaseHandler {
 		return hashed;
 	}
 	
+	/**
+	 * Add a new review to the database
+	 * @param username
+	 * 		user's name
+	 * @param hotelid
+	 * 		hotel's id
+	 * @param title
+	 * 		review's title
+	 * @param text
+	 * 		review's content
+	 * @param rating
+	 * 		review's rating
+	 * @param recom
+	 * 		review's recommendation
+	 * @return
+	 * 		the result of adding this review to database
+	 */
 	public Status addReview(String username, String hotelid, String title, String text, String rating, String recom)
 	{
 		Status status = Status.ERROR;
@@ -257,6 +277,15 @@ public class DatabaseHandler {
 		return status;
 	}
 	
+	/**
+	 * search all reviews information in database for the web request
+	 * @param list
+	 * 		data structure to store hotels information
+	 * @param hotelid
+	 * 		the id of hotel which from web's request
+	 * @return
+	 * 		The result of search all hotels in database
+	 */
 	public Status viewReview(String hotelid, TreeSet<Review> list)
 	{
 		Status status = Status.ERROR;
@@ -285,6 +314,13 @@ public class DatabaseHandler {
 		return status;
 	}
 	
+	/**
+	 * search all hotels information in database for the web request
+	 * @param list
+	 * 		data structure to store hotels information
+	 * @return
+	 * 		The result of search all hotels in database
+	 */
 	public Status viewHotel(TreeSet<HotelWithRating> list)
 	{
 		Status status = Status.ERROR;
@@ -309,6 +345,15 @@ public class DatabaseHandler {
 	}
 	
 	
+	/**
+	 * user login, make sure the user name and password are correct.
+	 *
+	 * @param user
+	 *            - user name of user
+	 * @param passwd
+	 *            - password of user
+	 * @return {@link Status.OK} if login successful
+	 */
 	public Status userLogin(String user, String passwd)
 	{
 		Status status = Status.ERROR;
@@ -397,7 +442,15 @@ public class DatabaseHandler {
 	}
 
 	
-/*	public Status createHotelTable(ThreadSafeHotelData hdata)
+ 	/**
+ 	 * Add all hotels in json to database
+ 	 * 
+ 	 * @param hdata The data structure that save the hotel information
+ 	 * @return
+ 	 * 		Is it performed successfully or not and the reason
+ 	 */
+/*	
+ 	public Status createHotelTable(ThreadSafeHotelData hdata)
 	{
 		Status status = Status.ERROR;
 		Map<String, Hotel> hotelMap = hdata.getHotelMap();
@@ -427,9 +480,16 @@ public class DatabaseHandler {
 		}
 
 		return status;
-	}
+	}*/
 	
-	public Status createReviewTable(ThreadSafeHotelData hdata)
+ 	/**
+ 	 * Add all reviews in json to database
+ 	 * 
+ 	 * @param hdata The data structure that save the hotel information
+ 	 * @return
+ 	 * 		Is it performed successfully or not and the reason
+ 	 */
+/*	public Status createReviewTable(ThreadSafeHotelData hdata)
 	{
 		Status status = Status.ERROR;
 		//Map<String, Hotel> hotelMap = hdata.getHotelMap();
@@ -467,6 +527,55 @@ public class DatabaseHandler {
 		return status;
 	}
 */	
+ 	/**
+ 	 * Add all users in json to database
+ 	 * 
+ 	 * @param hdata The data structure that save the hotel information
+ 	 * @return
+ 	 * 		Is it performed successfully or not and the reason
+ 	 */
+	/*public Status createUserTable(ThreadSafeHotelData hdata)
+	{
+		Status status = Status.ERROR;
+		//Map<String, Hotel> hotelMap = hdata.getHotelMap();
+		Map<String, TreeSet<Review>>reviewMap = hdata.getReviewMap();
+		// try to connect to database and test for duplicate user
+		try (Connection connection = db.getConnection();) {
+			try (PreparedStatement statement = connection.prepareStatement(CREATE_USER_TABLE_SQL);) {
+				for (String id : reviewMap.keySet())
+				{
+					System.out.println("ID: " + id);
+					TreeSet<Review> reviewSet = reviewMap.get(id);
+					for (Review review : reviewSet)
+					{
+						Status s = duplicateUser(connection, review.getReviewUsername());
+						if (s == Status.DUPLICATE_USER)
+							continue;
+						if (s == Status.OK)
+						{	
+							statement.setString(1, review.getReviewUsername());
+							byte[] saltBytes = new byte[16];
+							random.nextBytes(saltBytes);
+							String usersalt = encodeHex(saltBytes, 32); // hash salt
+							String passhash = getHash("123456", usersalt);
+							statement.setString(2, passhash);
+							statement.setString(3, usersalt);
+							statement.executeUpdate();
+						}
+					}
+
+
+					System.out.println("OVER");
+				}				
+				status = Status.OK;
+			}
+		} catch (SQLException ex) {
+			status = Status.CONNECTION_FAILED;
+			System.out.println("Error while connecting to the database: " + ex);
+		}
+
+		return status;
+	}*/
 	
 	/**
 	 * Gets the salt for a specific user.

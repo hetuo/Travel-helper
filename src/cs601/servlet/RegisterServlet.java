@@ -12,10 +12,16 @@ import org.apache.commons.lang3.StringEscapeUtils;
 import cs601.database.DatabaseHandler;
 import cs601.database.Status;
 
+/**
+ * Class RegisterServlet - a servlet class that handler the request from web about register
+ * @author TuoHe
+ */
 public class RegisterServlet extends BaseServlet{
 
 	private static final DatabaseHandler dbhandler = DatabaseHandler.getInstance();
 	
+	/**Override the doGet method to process the request from client about register
+	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException{
 			PrintWriter out = response.getWriter();			
@@ -28,6 +34,8 @@ public class RegisterServlet extends BaseServlet{
 			displayForm(out); 
 		}
 	
+	/**Override the doPost method to process the request from client about register
+	 */
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 	throws ServletException, IOException{

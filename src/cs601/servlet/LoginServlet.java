@@ -16,7 +16,7 @@ import cs601.database.Status;
 //import cs601.hotelapp.ThreadSafeHotelData;
 
 /**
- * Class ReviewsInfoServlet - a servlet class that handler the request from web about review information
+ * Class LoginServlet - a servlet class that handler the request from web about login
  * @author TuoHe
  */
 @SuppressWarnings("serial")
@@ -24,7 +24,7 @@ public class LoginServlet extends BaseServlet{
 	
 	private static final DatabaseHandler dbhandler = DatabaseHandler.getInstance();
 	
-	/**Override the doGet method to process the request from client about review information
+	/**Override the doGet method to process the request from client about login
 	 */
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -40,7 +40,7 @@ public class LoginServlet extends BaseServlet{
 		displayForm(out); 		
 	}
 	
-	/**Override the doPost method to process the request from client about review information
+	/**Override the doPost method to process the request from client about login
 	 */
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -63,7 +63,10 @@ public class LoginServlet extends BaseServlet{
 		}
 	}
 	
-	/** Writes and HTML form that shows two textfields and a button to the PrintWriter */
+	/** Writes and HTML form that shows two textfields and a button to the PrintWriter
+	 * @param
+	 * 		response
+	 *  */
 	private void displayForm(PrintWriter out) {
 		assert out != null;		
 		out.println("<form action=\"\" method=\"\">");
