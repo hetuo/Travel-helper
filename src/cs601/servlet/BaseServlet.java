@@ -1,5 +1,10 @@
 package cs601.servlet;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.DateFormat;
@@ -7,7 +12,9 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.TreeSet;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
@@ -18,6 +25,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import cs601.database.Status;
+import cs601.hotelapp.HotelWithRating;
 
 /**
  * Provides base functionality to all servlets in this example. Original author:
@@ -156,4 +164,84 @@ public class BaseServlet extends HttpServlet {
 
 		return status.toString();
 	}
+	
+	@SuppressWarnings("null")
+	protected String readWebPage(String path)
+	{
+		System.out.println(System.getProperty("user.dir"));
+		File file = new File(path);
+		BufferedReader br = null;
+		StringBuffer content = new StringBuffer();
+		try {
+			br = new BufferedReader(new FileReader(file));
+			String templine = null;
+			while ((templine = br.readLine()) != null)
+			{
+				//System.out.println(templine);
+				content.append(templine + System.lineSeparator());}
+			br.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return content.toString();
+	}
+	
+	protected String generateJSONString(TreeSet<HotelWithRating> set, String page)
+	{
+		StringBuffer sb = new StringBuffer();
+		sb.append("{\"numOfPages\":\"" + set.size() / 6 + "\"," + "\"hotels\":[");
+		Iterator<HotelWithRating> it = set.iterator();
+		int p = Integer.parseInt(page);
+		int i = 0;
+		while (it.hasNext() &&  i < 6 * p)
+		{
+			HotelWithRating hotel = it.next();
+			if (i < 6 * (p-1))
+			{
+				i++;
+				continue;
+			}
+			sb.append("{\"hotelid\":\"" + hotel.getHotel().getHotelId() + "\",");
+			sb.append("\"name\":\"" + hotel.getHotel().getHotelName() + "\",");
+			sb.append("\"addr\":\"" + hotel.getHotel().getHotelAddress().getStreet() + "\",");
+			sb.append("\"city\":\"" + hotel.getHotel().getHotelAddress().getCity() + "\",");
+			sb.append("\"rating\":\"" + hotel.getRating() + "\"}," );
+			i++;
+		}
+		sb.deleteCharAt(sb.length() - 1);
+		sb.append("]" + "}");
+		return sb.toString();
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }

@@ -37,7 +37,12 @@ public class LoginServlet extends BaseServlet{
 			String errorMessage = getStatusMessage(error);
 			out.println("<p style=\"color: red;\">" + errorMessage + "</p>");
 		}
-		displayForm(out); 		
+		//displayForm(out); 
+		//out.println("<script type='text/javascript'>");
+		//out.println("window.open('/home/tuo/workspace/the8USF-project/src/cs601/webpage/login.html')");
+		//out.println("</script>");
+		//response.sendRedirect("login.html");
+		out.print(readWebPage("src/cs601/webpage/login1.html"));
 	}
 	
 	/**Override the doPost method to process the request from client about login

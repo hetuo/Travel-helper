@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Bootstrap Example</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <style>
+    /* Remove the navbar's default margin-bottom and rounded borders */ 
+.loginmodal-container {
+  padding: 30px;
+  max-width: 350px;
+  width: 100% !important;
+  background-color: #F7F7F7;
+  margin: 0 auto;
+  border-radius: 2px;
+  box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+  font-family: roboto;
+}
+
+.loginmodal-container h1 {
+  text-align: center;
+  font-size: 1.8em;
+  font-family: roboto;
+}
+
+.loginmodal-container input[type=submit] {
+  width: 100%;
+  display: block;
+  margin-bottom: 10px;
+  position: relative;
+}
+
+.loginmodal-container input[type=text], input[type=password] {
+  height: 44px;
+  font-size: 16px;
+  width: 100%;
+  margin-bottom: 10px;
+  -webkit-appearance: none;
+  background: #fff;
+  border: 1px solid #d9d9d9;
+  border-top: 1px solid #c0c0c0;
+  /* border-radius: 2px; */
+  padding: 0 8px;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+}
+
+.loginmodal-container input[type=text]:hover, input[type=password]:hover {
+  border: 1px solid #b9b9b9;
+  border-top: 1px solid #a0a0a0;
+  -moz-box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+  -webkit-box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+}
+
+.loginmodal {
+  text-align: center;
+  font-size: 14px;
+  font-family: 'Arial', sans-serif;
+  font-weight: 700;
+  height: 36px;
+  padding: 0 8px;
+/* border-radius: 3px; */
+/* -webkit-user-select: none;
+  user-select: none; */
+}
+
+.loginmodal-submit {
+  /* border: 1px solid #3079ed; */
+  border: 0px;
+  color: #fff;
+  text-shadow: 0 1px rgba(0,0,0,0.1); 
+  background-color: #4d90fe;
+  padding: 17px 0px;
+  font-family: roboto;
+  font-size: 14px;
+  /* background-image: -webkit-gradient(linear, 0 0, 0 100%,   from(#4d90fe), to(#4787ed)); */
+}
+
+.loginmodal-submit:hover {
+  /* border: 1px solid #2f5bb7; */
+  border: 0px;
+  text-shadow: 0 1px rgba(0,0,0,0.3);
+  background-color: #357ae8;
+  /* background-image: -webkit-gradient(linear, 0 0, 0 100%,   from(#4d90fe), to(#357ae8)); */
+}
+
+.loginmodal-container a {
+  text-decoration: none;
+  color: #666;
+  font-weight: 400;
+  text-align: center;
+  display: inline-block;
+  opacity: 0.6;
+  transition: opacity ease 0.5s;
+} 
+
+.login-help{
+  font-size: 12px;
+}
+
+.bg{
+    background-image: url('image.jpg');
+    min-height: 100%;
+    background-position: center;
+    background-size: cover;  
+}
+  </style>
+
+
+
+
+
+<script type="text/javascript">
+var curPage = 1;
+var numOfHotels, numOfPages;
+function getHotels(page)
+{
+    curPage = page;
+    //window.alert(5 + 6);
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function()
+    {
+	if (this.readyState == 4 && this.status == 200)
+	{
+            debugger;
+	   // var text = '{"numOfPages":"31","hotels":[{"name":"673 San Francisco Avenue","addr":"673 San Francisco Avenue","city":"South Lake Tahoe","rating":"2.5"}{"name":"Adante Hotel, a C-Two Hotel","addr":"610 Geary St","city":"San Francisco","rating":"3.4"}{"name":"Almond Suite - San Francisco","addr":"San Francisco 335","city":"Santiago","rating":"5558.0"}{"name":"Aloft San Francisco Airport","addr":"401 E Millbrae Ave","city":"Millbrae","rating":"3.6"}{"name":"Amazing Home in San Francisco Bay","addr":"1508 Magnolia Street","city":"Oakland","rating":"0.0"}{"name":"Americas Best Value Inn & Suites - Mill Valley/San Francisco","addr":"155 Shoreline Hwy","city":"Mill Valley","rating":"3.1"]}
+
+	    //var text = '{"numOfPages":"31"}'
+	    var responseObj = JSON.parse(this.responseText);
+	    //var responseObj = JSON.parse(text);
+	    numOfPages = parseInt(responseObj.numOfPages);
+            updatePages();
+	    var listStr;
+	    for (var i = 0; i < responseObj.hotels.length; i++)
+	    {
+		listStr += "<div class=\"col-md-4 column\"><h4>" + responseObj.hotels[i].name;
+		listStr += "</h2><p>" + responseObj.hotels[i].addr + "</p>";
+		listStr += "<p>" + responseObj.hotels[i].city + "</p>";
+		listStr += "<p>" + responseObj.hotels[i].rating + "</p>";
+		listStr += "<p><a class=\"btn\" href=/detail?hotelid="+responseObj.hotels[i].hotelid+">View details </a></p></div>";
+	    }
+	    document.getElementById("hotels").innerHTML = listStr;
+	}
+    };
+    xhttp.open("GET", "viewhotel?page=" + page, true);
+    xhttp.send();
+}
+
+function updatePages()
+{
+    var pageStr;
+    if (curPage > numOfPages)
+	curPage = numOfPages;
+    if (curPage < 1)
+	curPage = 1;
+    pageStr = "<span>" + numOfPages + "pages</span><span>" + curPage + "/" + numOfPages + "</span>";
+    if (curPage == 1)
+	pageStr += "<span>first page</span><span>previous page</span>";	
+    else
+	pageStr += "<span><a href=javascript:void(0) onclick=getHotels(1)>first page</a></span><span><a href=javascript:void(0) onclick=getHotels(" + (curPage - 1) + ")>previous page</a></span>";
+    if (curPage == numOfPages)
+	pageStr += "<span>next page</span><span>last page</span>";
+    else
+	pageStr += "<span><a href=javascript:void(0) onclick=getHotels(" + (curPage + 1) + ")>next page</a></span><span><a href=javascript:void(0) onclick=getHotels(" + numOfPages + ")>last page</a></span>";
+    document.getElementById("pages").innerHTML = pageStr;
+}
+
+</script>
+</head>
+
+<body onload="getHotels(1);">
+<div class="container">
+
+<h1>My First JavaScript</h1>
+
+<button type="button"
+onclick="document.getElementById('demo').innerHTML = Date()">
+Click me to display Date and Time.</button>
+
+<p id="demo"></p>
+
+
+<div align="right">
+<a href="#" data-toggle="modal" data-target="#login-modal">Login</a>
+<a href="#" data-toggle="modal" data-target="#register-modal">Register</a>
+</div>
+
+<form style="background-color:#EEEEEE;height:200px;">
+    <input type="text" name="hotelname" placeholder="hotel's name">
+    <input type="submit" name="search" value="Search">
+</form>
+<div id="hotels" class="row clearfix">
+</div>
+<div id="pages"></div>
+</div>
+
+
+<div class="modal fade" id="login-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+    	  <div class="modal-dialog">
+				<div class="loginmodal-container">
+					<h1>Login to Your Account</h1><br>
+				  <form>
+					<input type="text" name="user" placeholder="Username">
+					<input type="password" name="pass" placeholder="Password">
+					<input type="submit" name="login" class="login loginmodal-submit" value="Login">
+				  </form>
+					
+				  <!--div class="login-help">
+					<a href="#">Register</a> - <a href="#">Forgot Password</a>
+				  </div-->
+				</div>
+			</div>
+		  </div>
+
+<div class="modal fade" id="register-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+    	  <div class="modal-dialog">
+				<div class="loginmodal-container">
+					<h1>Register a new Account</h1><br>
+				  <form>
+					<input type="text" name="user" placeholder="Username">
+					<input type="password" name="pass" placeholder="Password">
+					<input type="submit" name="Register" class="login loginmodal-submit" value="Register">
+				  </form>
+					
+				  <!--div class="login-help">
+					<a href="#">Register</a> - <a href="#">Forgot Password</a>
+				  </div-->
+				</div>
+			</div>
+		  </div>
+</body>
+</html>
+

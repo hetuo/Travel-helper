@@ -27,18 +27,24 @@ public class ViewHotelServlet extends BaseServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 		throws ServletException, IOException{
-		if (request.getSession().getAttribute("user") == null)
+		/*if (request.getSession().getAttribute("user") == null)
 			response.sendRedirect("/login");
 		//ArrayList<HotelWithRating> list = new ArrayList<HotelWithRating>();
 		TreeSet<HotelWithRating> list = new TreeSet<HotelWithRating>();
 		dbhandler.viewHotel(list);
 		PrintWriter out = response.getWriter();
-		displayForm(out, list); 		
+		displayForm(out, list);*/ 
+		System.out.println("xxxx");
+		TreeSet<HotelWithRating> list = new TreeSet<HotelWithRating>();
+		dbhandler.viewHotel(list);
+		System.out.println(request.getParameter("page"));
+		System.out.println(generateJSONString(list, request.getParameter("page")));
+		response.getWriter().println(generateJSONString(list, request.getParameter("page")));	
 	}
 	
 	/** Writes and HTML form that shows hotels
 	 **/
-	private void displayForm(PrintWriter out, TreeSet<HotelWithRating> list)
+	/*private void displayForm(PrintWriter out, TreeSet<HotelWithRating> list)
 	{
 		assert out != null;	
 		out.println("<a href=/main>Click here back to home</a>");
@@ -55,6 +61,6 @@ public class ViewHotelServlet extends BaseServlet {
 			out.println("</tr>");
 		}
 		out.println("</table>");		
-	}
+	}*/
 
 }

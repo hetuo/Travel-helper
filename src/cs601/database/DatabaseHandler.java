@@ -23,6 +23,7 @@ import org.apache.logging.log4j.Logger;
 import cs601.hotelapp.HotelWithRating;
 import cs601.hotelapp.Address;
 import cs601.hotelapp.Hotel;
+import cs601.hotelapp.HotelDetails;
 import cs601.hotelapp.Review;
 import cs601.hotelapp.ThreadSafeHotelData;
 
@@ -36,7 +37,8 @@ public class DatabaseHandler {
 
 	/** Makes sure only one database handler is instantiated. */
 	private static DatabaseHandler singleton = new DatabaseHandler();
-
+    private static final String GETHOTELDETAILS_SQL = "select hotel.*, review.* from hotel left join review"
+    		+ " on hotel.id = review.hotelid where hotel.id = ?;";
 	/** Used to determine if login_users table exists. */
 	private static final String TABLES_SQL = "SHOW TABLES LIKE 'login_users';";
 	private static final String ADD_REVIEW_SQL = "insert into review (reviewid, hotelid, title, "
@@ -310,6 +312,40 @@ public class DatabaseHandler {
 		}catch (SQLException ex) {
 			status = Status.CONNECTION_FAILED;
 			System.out.println("Error while connecting to the database: " + ex);
+		}
+		return status;
+	}
+	
+	public Status getHotelDetails(String hotelid, HotelDetails details)
+	{
+		Status status = Status.ERROR;
+		try (Connection connection = db.getConnection();)
+		{
+			try (PreparedStatement statement = connection.prepareStatement(GETHOTELDETAILS_SQL);)
+			{
+				statement.setString(1, hotelid);
+				ResultSet rs = statement.executeQuery();
+				ArrayList<Review> reviews = new ArrayList<Review>();
+				while (rs.next())
+				{
+					if (details.getHotel() == null)
+					{
+						Hotel hotel = new Hotel(rs.getString(1), rs.getString(2), new Address(rs.getString(3), 
+								rs.getString(4), rs.getString(5), rs.getDouble(7), rs.getDouble(8)), rs.getString(6));
+						details.setHotel(hotel);
+					}					
+					Review review = new Review(rs.getString(9), rs.getString(10), rs.getString(11), rs.getString(12), 
+							rs.getString(13), rs.getString(14), rs.getBoolean(15), rs.getInt(16));
+					reviews.add(review);
+				}
+				details.setReviews(reviews);
+				status = Status.OK;
+			}
+		}
+		catch (SQLException e)
+		{
+			status = Status.CONNECTION_FAILED;
+			e.printStackTrace();
 		}
 		return status;
 	}
