@@ -32,6 +32,9 @@ public class TouristAttractionServlet extends BaseServlet{
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 		throws ServletException, IOException{	
 		response.setContentType("text/html;charset=UTF-8;pageEncoding=UTF-8");
+		String sessionId = (String)request.getSession().getAttribute("user");
+		if (sessionId == null || userMap.get(sessionId) == null)
+			response.sendRedirect("/login");
 		String radius = request.getParameter("radius");
 		//String hotelid = (String)request.getSession().getAttribute("currHotelId");
 		String hotelid = request.getParameter("hotelid");
@@ -42,6 +45,7 @@ public class TouristAttractionServlet extends BaseServlet{
         VelocityEngine ve = (VelocityEngine)request.getServletContext().getAttribute("templateEngine");
         VelocityContext context = new VelocityContext();
         Template template = ve.getTemplate("src/cs601/webpage/attraction.html");
+        context.put("username", userMap.get(sessionId));
         context.put("attractionList", attractions);
         StringWriter writer = new StringWriter();
         template.merge(context, writer);

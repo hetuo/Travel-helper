@@ -62,7 +62,33 @@ body {
 }
 
 
+
   </style>
+  
+<script>
+function validateName(name) {
+    var numval = name.value;
+   // should start with an upper case letter
+    if ( numval.charAt(0) >= '0' && numval.charAt(0) <= '9') {
+        alert ('First letter must be letter!');
+    }   
+       
+}
+
+function validatePassword(name) {
+    var numval = name.value;
+   // should start with an upper case letter
+    if ( numval.charAt(0) != numval.charAt(0).toUpperCase() || (numval.charAt(0) >= '0' && numval.charAt(0) <= '9')) {
+        alert ('First letter must be uppercase!');
+    }   
+    else if (numval.length <= 5) {
+           alert('Password must be 6 characters at least');
+    }   
+}
+
+
+</script>  
+  
 </head>
 
 
@@ -70,9 +96,9 @@ body {
 	  <div class="wrapper">
     <form class="form-signin" name="form1" action="register" method="post">       
       <h2 class="form-signin-heading">Please Register</h2>
-      <input type="text" class="form-control" name="username" placeholder="Username"  />
+      <input type="text" class="form-control" name="username" placeholder="Username" onchange="validateName(this)" />
       <br>
-      <input type="password" class="form-control" name="password" placeholder="Password" />     
+      <input type="password" class="form-control" name="password" placeholder="Password" onchange="validatePassword(this)"/>     
 	  <br>
       <button class="btn btn-lg btn-primary btn-block" type="submit">Register</button>   
     </form>

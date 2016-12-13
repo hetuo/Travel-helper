@@ -56,7 +56,13 @@ public class EditReviewServlet extends BaseServlet{
 		String rating = (String)request.getParameter("optradio");
 		String recom = (String)request.getParameter("recom");
 		dbhandler.updateReview(reviewId, title, text, rating, recom);
-		response.getWriter().println("ok");
+        VelocityEngine ve = (VelocityEngine)request.getServletContext().getAttribute("templateEngine");
+        VelocityContext context = new VelocityContext();
+        Template template = ve.getTemplate("src/cs601/webpage/success.html");
+        context.put("username", userMap.get(sessionId));
+        StringWriter writer = new StringWriter();
+        template.merge(context, writer);
+        response.getWriter().println(writer.toString());
 	}
 
 

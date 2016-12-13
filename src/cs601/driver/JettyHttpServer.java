@@ -15,7 +15,7 @@ import cs601.servlet.*;
  */
 public class JettyHttpServer {
 	
-	public static final int PORT = 8080;
+	public static final int PORT = 5000;
 		
 	/**
 	 * A method to start the Jetty server
