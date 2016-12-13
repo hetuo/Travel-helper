@@ -39,6 +39,7 @@ import cs601.hotelapp.Review;
 public class BaseServlet extends HttpServlet {
 
 	public static Map<String, String> userMap = new HashMap<String, String>();
+	public static String lastTime = null;
 	
 	/**
 	 * Return the error message by error name

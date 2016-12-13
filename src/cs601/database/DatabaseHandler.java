@@ -37,6 +37,9 @@ public class DatabaseHandler {
 
 	/** Makes sure only one database handler is instantiated. */
 	private static DatabaseHandler singleton = new DatabaseHandler();
+	private static final String UPDATELOGINDATE_SQL = "update users set date = ? where username = ?;";
+	private static final String GETLASTLOGINTIME_SQL = "select date from users where username = ?;";
+	private static final String GETHOTELBYNAME_SQL = "select id from hotel where name = ?;";
 	private static final String UPDATEREVIEW_SQL = "update review set title = ?, text = ?, date = ?, rating = ?, recom = ? where reviewid = ?;";
 	private static final String GETMAPINFO_SQL = "select longitude, latitude from hotel where id = ?;";
 	private static final String DELETEREVIEW_SQL = "delete from review where reviewId = ?;";
@@ -446,6 +449,25 @@ public class DatabaseHandler {
 		return result;
 	}
 	
+	public String getHotelByName(String name)
+	{
+		String result = null;
+		try (Connection connection = db.getConnection();)
+		{
+			try (PreparedStatement statement = connection.prepareStatement(GETHOTELBYNAME_SQL);)
+			{
+				statement.setString(1, name);
+				ResultSet rs = statement.executeQuery();
+				if (rs.next())
+					result = rs.getString(1);		
+			}
+		}	
+		catch (SQLException e)
+		{
+			e.printStackTrace();
+		}	
+		return result;
+	}
 	
 	public String getMapInformation(String hotelid)
 	{
@@ -555,7 +577,7 @@ public class DatabaseHandler {
 					Hotel hotel = new Hotel(rs.getString(1), rs.getString(2), new Address(rs.getString(3),
 							 rs.getString(4), rs.getString(5), rs.getDouble(7), rs.getDouble(8)), 
 							 rs.getString(6));
-					list.add(new HotelWithRating(hotel,rs.getFloat(9)));
+					list.add(new HotelWithRating(hotel,rs.getFloat(10)));
 				}
 				status = Status.OK;
 			}
@@ -577,7 +599,7 @@ public class DatabaseHandler {
 	 *            - password of user
 	 * @return {@link Status.OK} if login successful
 	 */
-	public Status userLogin(String user, String passwd)
+	public Status userLogin(String user, String passwd, ArrayList<String> list)
 	{
 		Status status = Status.ERROR;
 		if (isBlank(user) || isBlank(passwd)) {
@@ -604,6 +626,28 @@ public class DatabaseHandler {
 						status = Status.INVALID_LOGIN;
 					
 				}
+				
+				try (PreparedStatement statement = connection.prepareStatement(GETLASTLOGINTIME_SQL);){
+					//statement.setString(1, user);
+					statement.setString(1, user);
+					ResultSet rs = statement.executeQuery();
+					String lastDate = null;
+					System.out.println(lastDate);
+					if (rs.next()){
+					lastDate = rs.getString(1);
+					}
+					list.add(lastDate);				
+				}
+				
+				try (PreparedStatement statement = connection.prepareStatement(UPDATELOGINDATE_SQL);){
+					//statement.setString(1, user);
+					SimpleDateFormat df = new SimpleDateFormat("yyyy-mm-dd HH:mm:ss");
+					statement.setString(1, df.format(new Date()));
+						
+					statement.setString(2, user);
+					statement.executeUpdate();					
+				}
+				
 			}
 			else if (status == Status.OK)
 				return Status.INVALID_LOGIN;

@@ -3,6 +3,7 @@ package cs601.servlet;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.ArrayList;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -63,7 +64,10 @@ public class LoginServlet extends BaseServlet{
 		name = StringEscapeUtils.escapeHtml4(name);
 		passwd = StringEscapeUtils.escapeHtml4(passwd);
 		// add user's info to the database 
-		Status status = dbhandler.userLogin(name, passwd);
+		//ArrayList<String> list = new ArrayList<String>();
+		ArrayList<String> list = new ArrayList<String>();
+		Status status = dbhandler.userLogin(name, passwd, list);
+		lastTime = list.get(0);
 		if(status == Status.OK) { // registration was successful
 			String sessionId = session.getId();
 			session.setAttribute("user", sessionId);

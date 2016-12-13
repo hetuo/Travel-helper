@@ -35,6 +35,10 @@ public class ProfileServlet extends BaseServlet{
 		VelocityEngine ve = (VelocityEngine)request.getServletContext().getAttribute("templateEngine");
 		Template template = ve.getTemplate("src/cs601/webpage/profile.html");
 		context.put("name", userMap.get(sessionId));
+		if (lastTime.equals("null"))
+		context.put("lastTime", "First time!");
+		else
+			context.put("lastTime", lastTime);
 		StringWriter writer = new StringWriter();
 		template.merge(context, writer);
 		out.println(writer.toString());
