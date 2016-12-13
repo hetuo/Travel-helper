@@ -36,6 +36,9 @@ public class JettyHttpServer {
 		context.addServlet(AddReviewServlet.class, "/addreview");
 		context.addServlet(HotelDetailsServlet.class, "/detail");
 		context.addServlet(TouristAttractionServlet.class, "/touristAttraction");
+		context.addServlet(ProfileServlet.class, "/profile");
+		context.addServlet(DeleteReviewServlet.class, "/deletereview");
+		context.addServlet(EditReviewServlet.class, "/editreview");
 		context.addServlet(DefaultServlet.class, "/");
 		
 		VelocityEngine velocity = new VelocityEngine();

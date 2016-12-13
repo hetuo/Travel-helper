@@ -35,6 +35,7 @@ public class TouristAttractionServlet extends BaseServlet{
 		String radius = request.getParameter("radius");
 		//String hotelid = (String)request.getSession().getAttribute("currHotelId");
 		String hotelid = request.getParameter("hotelid");
+		System.out.println(hotelid);
 		String addrInfo = dbhandler.getHotelAddr(hotelid);
 		PrintWriter out = response.getWriter();
 		ArrayList<TouristAttraction> attractions = fetchAttractions(Integer.parseInt(radius), addrInfo);

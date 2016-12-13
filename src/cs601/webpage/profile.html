@@ -20,20 +20,38 @@ function getReviews()
 	{  
 	    var responseObj = JSON.parse(this.responseText);	 
 	    numOfPages = parseInt(responseObj.numOfPages);
-        updatePages();
 	    var listStr = "";
 	    for (var i = 0; i < responseObj.reviews.length; i++)
 	    {
 		listStr += "<li><div class=\"comment-main-level\"><div class=\"comment-box\"><div class=\"comment-head\"><h6 class=\"comment-name\">";
-		listStr += responseObj.reviews[i].author + "</h6><span><h6>" + responseObj.reviews[i].date + "</h6></span><span><h6>&nbsp&nbsp&nbsp&nbsp&nbsp&nbspRating:&nbsp&nbsp"+responseObj.reviews[i].rating+"</h6></span><button class=\"but btn btn-outline-secondary\" id=\"btn\" value=\""+responseObj.reviews[i].id+"\" onclick=\"getLikes(this.value,"+i+");\"><i class=\"fa fa-thumbs-up\"></i></button>";
-		listStr += "<h6 class=\"but\" id=\"label"+i+"\">"+ responseObj.reviews[i].likes +" people found this review helpful&nbsp&nbsp&nbsp</h6></div><div class=\"comment-content\">" + responseObj.reviews[i].text + "</div></div></div><li>";
+		listStr += responseObj.reviews[i].author + "</h6><span><h6>" + responseObj.reviews[i].hotel + "</h6></span><span><h6>&nbsp&nbsp&nbsp&nbsp&nbsp&nbspRating:&nbsp&nbsp"+responseObj.reviews[i].rating + "</h6></span><h6><span>&nbsp&nbsp&nbsp&nbsp&nbsp&nbspTitle:&nbsp&nbsp"+responseObj.reviews[i].title
+		listStr += "</h6></span><button class=\"but btn btn-outline-secondary\" id=\"btn\" value=\""+responseObj.reviews[i].id+"\" onclick=\"deleteReview(this.value);\">Delete</button>";
+		listStr += "</h6><h6 class=\"but\"><sapn>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</sapn></h6><h6 class=\"but\"><span><a  href=\"/editreview?reviewId="+responseObj.reviews[i].id+"\">Edit</a></span>";
+		listStr += "</div><div class=\"comment-content\">" + responseObj.reviews[i].text + "</div></div></div><li>";
 	    }
 	    document.getElementById("comments-list").innerHTML = listStr;
 	}
     };
-    xhttp.open("GET", "review?page=" + page + "&hotelid=" + hotelid + "&type=" + sortType, true);
+    xhttp.open("POST", "profile", true);
+    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     xhttp.send();
 } 
+
+function deleteReview(reviewId)
+{
+
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function()
+	{
+		if (this.readyState == 4 && this.status == 200)
+		{
+			getReviews();
+		}
+	};
+	xhttp.open("POST", "deletereview", true);
+	xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+	xhttp.send("reviewId=" + reviewId);
+}
 </script>
  
 <style>
@@ -71,6 +89,7 @@ body {
  =======================*/
 .but{
 	float: right;
+	right: 10px;
 }
 
 .hotel-container{
@@ -431,8 +450,21 @@ border: 1px solid #F2F2F2;
 </style>
 </head>
 
-<body>
+<body onload="getReviews();">
 <div class="container">
+
+<nav class="navbar navbar-dark bg-inverse">
+  
+    <ul class="nav navbar-nav">
+      <li><a class="active" style="font-size:20px;font-weight:bold;" href="http://localhost:8080/main">HOME</a></li>
+    </ul>
+   
+	<ul class="nav navbar-nav navbar-right">
+	  <li><a href="/logout">Logout</a></li>
+	</ul>
+
+</nav>	
+	
 	<div class="hotel-container">
 		<div class="hotel-avatar"><img src="user.jpeg"></img></div>
 	<h1>Welcome, $name !</h1>

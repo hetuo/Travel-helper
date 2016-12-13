@@ -26,11 +26,19 @@ public class AddReviewServlet extends BaseServlet{
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException{
-			if (request.getSession().getAttribute("user") == null)
-				response.sendRedirect("/login");
-			hotelid = (String)request.getParameter("hotelid");
-			PrintWriter out = response.getWriter();
-			displayForm(out); 			
+		String sessionId = (String)request.getSession().getAttribute("user");
+		hotelid = (String)request.getSession().getAttribute("hotelid");
+		if (sessionId == null || userMap.get(sessionId) == null)
+			response.sendRedirect("/login");
+		String title = (String)request.getParameter("title");
+		String text = (String)request.getParameter("comment");
+		String rating = (String)request.getParameter("optradio");
+		String recom = (String)request.getParameter("recom");
+		String username = userMap.get(sessionId);
+		dbhandler.addReview(username, hotelid, title, text, rating, recom);
+		PrintWriter out = response.getWriter();
+		out.println("<p>Add review successfully!</p><br>");
+		out.println("<a href=/main>Click here back to home page</a>");	
 		}
 	
 	/**Override the doPost method to process the request from client about add review
@@ -50,34 +58,6 @@ public class AddReviewServlet extends BaseServlet{
 		out.println("<a href=/viewhotel>Click here back to view hotel</a>");
 	}
 	
-	/** Writes and HTML form that shows two textfields and a button to the PrintWriter 
-	 * @param out
-	 * 		response 
-	 * */
-	private void displayForm(PrintWriter out)
-	{
-		out.println("<form action=\"/addreview\" method=\"post\">"); // the form will be processed by POST
-		out.println("<table border=\"0\">");
-		out.println("\t<tr>");
-		out.println("\t\t<td>Title:</td>");
-		out.println("\t\t<td><textarea name=\"title\" cols=\"20\" rows=\"1\"></textarea></td>");
-		out.println("\t</tr>");
-		out.println("\t<tr>");
-		out.println("\t\t<td>Text:</td>");
-		out.println("\t\t<td><textarea name=\"text\" cols=\"20\" rows=\"5\"></textarea></td>");
-		out.println("</tr>");
-		out.println("\t<tr>");
-		out.println("\t\t<td>Rating:</td>");
-		out.println("\t\t<td><textarea name=\"rating\" cols=\"5\" rows=\"1\"></textarea></td>");
-		out.println("</tr>");
-		out.println("\t<tr>");
-		out.println("\t\t<td>IsRecom:</td>");
-		out.println("\t\t<td><input type=\"radio\" name=\"recom\" value=\"yes\" checked> YES</td>");
-		out.println("\t\t<td><input type=\"radio\" name=\"recom\" value=\"no\"> NO</td>");
-		out.println("</tr>");
-		out.println("</table>");
-		out.println("<p><input type=\"submit\" value=\"Add\"></p>");
-		out.println("</form>");
-	}
+
 
 }

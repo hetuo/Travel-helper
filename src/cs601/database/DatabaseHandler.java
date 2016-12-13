@@ -37,7 +37,11 @@ public class DatabaseHandler {
 
 	/** Makes sure only one database handler is instantiated. */
 	private static DatabaseHandler singleton = new DatabaseHandler();
+	private static final String UPDATEREVIEW_SQL = "update review set title = ?, text = ?, date = ?, rating = ?, recom = ? where reviewid = ?;";
 	private static final String GETMAPINFO_SQL = "select longitude, latitude from hotel where id = ?;";
+	private static final String DELETEREVIEW_SQL = "delete from review where reviewId = ?;";
+	private static final String GETREVIEWBYID_SQL = "select * from review where reviewId = ?;";
+	private static final String GETUSERREVIEW_SQL = "select review.*, hotel.name from review join hotel on review.hotelid = hotel.id where username = ?;";
     private static final String GETHOTELDETAILS_SQL = "select hotel.*, review.* from hotel left join review"
     		+ " on hotel.id = review.hotelid where hotel.id = ?;";
     private static final String GETHOTEL_SQL = "select city, longitude, latitude from hotel where id = ?;";
@@ -236,6 +240,8 @@ public class DatabaseHandler {
 		return hashed;
 	}
 	
+	
+	
 	/**
 	 * Add a new review to the database
 	 * @param username
@@ -329,6 +335,89 @@ public class DatabaseHandler {
 		return status;
 	}
 	
+	public Status getUserReview(String name, ArrayList<Review> list)
+	{
+		Status status = Status.ERROR;
+
+		try (Connection connection = db.getConnection();) {
+			try (PreparedStatement statement = connection.prepareStatement(GETUSERREVIEW_SQL);){
+				statement.setString(1, name);
+				//System.out.println(hotelid);
+				ResultSet rs = statement.executeQuery();
+				/*if (rs.next())
+					System.out.println("xxxxxxxxxxxxxxxxxxxxxxx");*/
+				while (rs.next())
+				{
+					Review review = new Review(rs.getString(1), rs.getString(10), rs.getString(3), 
+							rs.getString(4), rs.getString(5), rs.getString(6), rs.getBoolean(7), rs.getInt(8), rs.getInt(9));
+					list.add(review);
+				}
+				status = Status.OK;
+			}
+			
+		}catch (SQLException ex) {
+			status = Status.CONNECTION_FAILED;
+			System.out.println("Error while connecting to the database: " + ex);
+		}
+		return status;		
+	}
+	
+	public Review getReviewById(String reviewId)
+	{
+		Review review = null;
+
+		try (Connection connection = db.getConnection();) {
+			try (PreparedStatement statement = connection.prepareStatement(GETREVIEWBYID_SQL);){
+				statement.setString(1, reviewId);
+				//System.out.println(hotelid);
+				ResultSet rs = statement.executeQuery();
+				/*if (rs.next())
+					System.out.println("xxxxxxxxxxxxxxxxxxxxxxx");*/
+				while (rs.next())
+				{
+					review = new Review(rs.getString(1), rs.getString(2), rs.getString(3), 
+							rs.getString(4), rs.getString(5), rs.getString(6), rs.getBoolean(7), rs.getInt(8), rs.getInt(9));
+
+				}
+
+			}
+			
+		}catch (SQLException ex) {
+			
+			System.out.println("Error while connecting to the database: " + ex);
+		}
+		return review;		
+	}
+	
+	public void updateReview(String reviewId, String title, String text, String rating, String recom)
+	{
+		
+		try (Connection connection = db.getConnection();) {
+			try (PreparedStatement statement = connection.prepareStatement(UPDATEREVIEW_SQL);){
+			
+				statement.setString(1, title);
+
+				statement.setString(2, text);
+
+				SimpleDateFormat df = new SimpleDateFormat("yyyy-mm-dd");
+				statement.setString(3, df.format(new Date()));
+				statement.setInt(4, Integer.parseInt(rating));
+				if (recom.equals("yes"))
+					statement.setBoolean(5, true);
+				else
+					statement.setBoolean(5, false);
+				statement.setString(6, reviewId);
+				statement.executeUpdate();
+
+			}
+			
+		}catch (SQLException ex) {
+			
+			System.out.println("Error while connecting to the database: " + ex);
+		}
+
+	}
+	
 	public String getReviewLikes(String reviewId)
 	{
 		String result = null;
@@ -357,6 +446,7 @@ public class DatabaseHandler {
 		return result;
 	}
 	
+	
 	public String getMapInformation(String hotelid)
 	{
 		String mapInfo = null;
@@ -375,6 +465,22 @@ public class DatabaseHandler {
 			e.printStackTrace();
 		}
 		return mapInfo;
+	}
+	
+	public void deleteReview(String reviewId)
+	{
+		try (Connection connection = db.getConnection();)
+		{
+			try (PreparedStatement statement = connection.prepareStatement(DELETEREVIEW_SQL);)
+			{
+				statement.setString(1, reviewId);
+				statement.executeUpdate();		
+			}
+		}
+		catch (SQLException e)
+		{
+			e.printStackTrace();
+		}		
 	}
 	
 	public String getHotelAddr(String hotelid)

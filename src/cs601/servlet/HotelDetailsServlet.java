@@ -28,7 +28,9 @@ public class HotelDetailsServlet extends BaseServlet{
 		String hotelid = request.getParameter("hotelid");
 		String rating = request.getParameter("rating");
 		HttpSession session = request.getSession();
-		session.setAttribute("currHotelId", hotelid);
+		String sessionId = (String)session.getAttribute("user");
+		session.setAttribute("hotelid", hotelid);
+			
 		HotelDetails details = new HotelDetails(null, null);
 		dbHandler.getHotelDetails(hotelid, details);
 		VelocityContext context = new VelocityContext();
@@ -36,7 +38,13 @@ public class HotelDetailsServlet extends BaseServlet{
 		Template template = ve.getTemplate("src/cs601/webpage/details.html");
 		String expedia = "https://www.expedia.com/h" + hotelid + ".Hotel-Information";
 		context.put("hotelid", hotelid);
-		context.put("status", "user");
+		if (sessionId == null || userMap.get(sessionId) == null)
+			context.put("status", "tourist");
+		else
+		{
+			context.put("status", "user");
+			context.put("username", userMap.get(sessionId));
+		}
 		context.put("expedia", expedia);
 		context.put("lat", details.getHotel().getHotelAddress().getLatitude());
 		context.put("lng", details.getHotel().getHotelAddress().getLongitude());

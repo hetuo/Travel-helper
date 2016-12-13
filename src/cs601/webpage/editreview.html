@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Bootstrap Example</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>  
+</head>
+
+<body >
+<div class="container">
+<nav class="navbar navbar-dark bg-inverse">
+  
+    <ul class="nav navbar-nav">
+      <li><a class="active" style="font-size:20px;font-weight:bold;" href="http://localhost:8080/main">HOME</a></li>
+    </ul>  
+	<ul class="nav navbar-nav navbar-right">
+	  <li><a href="/profile">Welcome, $username!</a></li>
+	  <li><a href="/logout">Logout</a></li>
+	</ul>
+</div>
+</nav>		
+<div class="container">
+		 <br>
+ <div class="form-group">
+  <form action="editreview" method="post">
+  <label for="comment">Title:</label>
+  <textarea class="form-control" rows="1" name="title" id="editTitle">$title</textarea>
+    <label for="comment">Comment:</label>
+  <textarea class="form-control" rows="5" name="comment" id="editText">$text</textarea>
+  <span id="reviewId"></span>
+<script>
+	
+	document.getElementById("reviewId").innerHTML = "<input type=\"hidden\" name=\"reviewId\" value="+'$reviewId'+" />";
+</script>
+  
+  <br>
+  <label for="comment">Rating:</label>
+<label class="radio-inline"><input type="radio" name="optradio" value="1">1 star</label>
+<label class="radio-inline"><input type="radio" name="optradio" value="2">2 stars</label>
+<label class="radio-inline"><input type="radio" name="optradio" value="3">3 stars</label> 
+<label class="radio-inline"><input type="radio" name="optradio" value="4">4 stars</label>
+<label class="radio-inline"><input type="radio" name="optradio" value="5">5 stars</label>
+<br>
+<label for="comment">Recommendation?:</label>
+<label class="radio-inline"><input type="radio" name="recom" value="yes">Yes</label>
+<label class="radio-inline"><input type="radio" name="recom" value="no">No</label>
+<br> 
+<input type="submit" class="btn btn-default" value="Submit" />
+  </form>
+</div>
+</div>
+</body>
+</html>

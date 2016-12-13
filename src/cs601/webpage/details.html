@@ -508,6 +508,26 @@ border: 1px solid #F2F2F2;
 
 <body onload="getReviews(1, 'normal');">
 <div class="container">
+<nav class="navbar navbar-dark bg-inverse">
+  
+    <ul class="nav navbar-nav">
+      <li><a class="active" style="font-size:20px;font-weight:bold;" href="http://localhost:8080/main">HOME</a></li>
+    </ul>
+#if ($status == "user")    
+	<ul class="nav navbar-nav navbar-right">
+	  <li><a href="/profile">Welcome, $username!</a></li>
+	  <li><a href="/logout">Logout</a></li>
+	</ul>
+ #end
+ #if ($status == "tourist")    
+	<ul class="nav navbar-nav navbar-right">
+	  <li><a href="/login">Login</a></li>
+	  <li><a href="/register">Register</a></li>
+	</ul>
+ #end
+</nav>	
+	
+
 	<div class="hotel-container">
 		<div class="hotel-avatar"><img src="index.jpeg"></img></div>
 	<h1>$name</h1>
@@ -515,7 +535,9 @@ border: 1px solid #F2F2F2;
 	<p>Address: $address</p>
 	<p>Average rating: $rating</p>
 	<span id="href"></span>
+#if ($status == "user")
 	<span id="tourist"></span>
+#end
 	<script>
 		document.getElementById("href").innerHTML = "<a href=\"https://www.expedia.com/h" + $hotelid + ".Hotel-Information\">View it at expedia</a>";
 		document.getElementById("tourist").innerHTML = "<form action=\"touristAttraction\" method=\"get\"><p>Display the tourist attractions in<input type=\"text\" size=\"5\" name=\"radius\"><input type=\"hidden\" name=\"hotelid\" value=\""+$hotelid+"\">miles<button type=\"submit\" class=\"btn btn-secondary\">Submit</button></p></form>"
@@ -536,13 +558,23 @@ border: 1px solid #F2F2F2;
 		 <br>
  <div class="form-group">
   <form action="addreview" method="get">
-  <label for="comment">Comment:</label>
-  <textarea class="form-control" rows="5" id="comment"></textarea>
-<label class="radio-inline"><input type="radio" name="optradio">Option 1</label>
-<label class="radio-inline"><input type="radio" name="optradio">Option 2</label>
-<label class="radio-inline"><input type="radio" name="optradio">Option 3</label> 
-<label class="radio-inline"><input type="radio" name="optradio">Option 4</label>
-<label class="radio-inline"><input type="radio" name="optradio">Option 5</label> 
+  <label for="comment">Title:</label>
+  <textarea class="form-control" rows="1" name="title"></textarea>
+    <label for="comment">Comment:</label>
+  <textarea class="form-control" rows="5" name="comment"></textarea>
+  <br>
+  <label for="comment">Rating:</label>
+<label class="radio-inline"><input type="radio" name="optradio" value="1">1 star</label>
+<label class="radio-inline"><input type="radio" name="optradio" value="2">2 stars</label>
+<label class="radio-inline"><input type="radio" name="optradio" value="3">3 stars</label> 
+<label class="radio-inline"><input type="radio" name="optradio" value="4">4 stars</label>
+<label class="radio-inline"><input type="radio" name="optradio" value="5">5 stars</label>
+<br>
+<label for="comment">Recommendation?:</label>
+<label class="radio-inline"><input type="radio" name="recom" value="yes">Yes</label>
+<label class="radio-inline"><input type="radio" name="recom" value="no">No</label>
+<br> 
+<input type="submit" class="btn btn-default" value="Submit" />
   </form>
 </div>
 </div>

@@ -127,6 +127,27 @@ public class BaseServlet extends HttpServlet {
 		return sb.toString();
 	}
 	
+	protected String generateJSONString(ArrayList<Review> set)
+	{
+		StringBuffer sb = new StringBuffer();
+		sb.append("{\"reviews\":[");
+		Iterator<Review> it = set.iterator();
+		while (it.hasNext())
+		{
+			Review review = it.next();
+			sb.append("{\"author\":\"" + review.getReviewUsername() + "\",");
+			sb.append("\"hotel\":\"" + review.getHotelId() + "\",");
+			sb.append("\"rating\":\"" + review.getRating() + "\",");
+			sb.append("\"id\":\"" + review.getReviewId() + "\",");
+			sb.append("\"title\":\"" + review.getReviewTitle() + "\",");
+			//sb.append("\"city\":\"" + hotel.getHotel().getHotelAddress().getCity() + "\",");
+			sb.append("\"text\":\"" + review.getReviewText() + "\"}," );
+		}
+		sb.deleteCharAt(sb.length() - 1);
+		sb.append("]" + "}");
+		return sb.toString();
+	}
+	
 	protected String generateJSONString(ArrayList<Review> set, String page)
 	{
 		StringBuffer sb = new StringBuffer();
@@ -154,34 +175,6 @@ public class BaseServlet extends HttpServlet {
 		sb.deleteCharAt(sb.length() - 1);
 		sb.append("]" + "}");
 		return sb.toString();
-	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	}	
 	
 }
