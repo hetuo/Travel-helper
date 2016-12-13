@@ -37,16 +37,22 @@ public class DatabaseHandler {
 
 	/** Makes sure only one database handler is instantiated. */
 	private static DatabaseHandler singleton = new DatabaseHandler();
+	private static final String GETMAPINFO_SQL = "select longitude, latitude from hotel where id = ?;";
     private static final String GETHOTELDETAILS_SQL = "select hotel.*, review.* from hotel left join review"
     		+ " on hotel.id = review.hotelid where hotel.id = ?;";
+    private static final String GETHOTEL_SQL = "select city, longitude, latitude from hotel where id = ?;";
 	/** Used to determine if login_users table exists. */
 	private static final String TABLES_SQL = "SHOW TABLES LIKE 'login_users';";
+	private static final String UPDATEREVIEWLIKES_SQL = "update review set likes = ? where reviewid = ?;";
+	private static final String GETREVIEWLIKES_SQL = "select likes from review where reviewid = ?;";
 	private static final String ADD_REVIEW_SQL = "insert into review (reviewid, hotelid, title, "
 			+ "text, username, date, recom, rating) values(?, ?, ?, ?, ?, ?, ?, ?)";
 	private static final String LOGIN_SQL = "select passwd, usersalt from users where username = ?;";
 	private static final String VIEWHOTEL_SQL = "select hotel.*, avg(rating) as rate from hotel"
 			+ " left join review on hotel.id = review.hotelid group by hotel.id;";
 	private static final String VIEWREVIEW_SQL = "select * from review where hotelid = ?;";
+	private static final String VIEWREVIEW_SQL_DATE = "select * from review where hotelid = ? order by date desc;";	
+	private static final String VIEWREVIEW_SQL_RATING = "select * from review where hotelid = ? order by rating desc;";
 	/** Used to create login_users table for this example. */
 	private static final String CREATE_SQL = "CREATE TABLE login_users ("
 			+ "userid INTEGER AUTO_INCREMENT PRIMARY KEY, " + "username VARCHAR(32) NOT NULL UNIQUE, "
@@ -288,11 +294,18 @@ public class DatabaseHandler {
 	 * @return
 	 * 		The result of search all hotels in database
 	 */
-	public Status viewReview(String hotelid, TreeSet<Review> list)
+	public Status viewReview(String hotelid, ArrayList<Review> list, String type)
 	{
 		Status status = Status.ERROR;
+		String sql = null;
+		if (type.equals("normal"))
+			sql = VIEWREVIEW_SQL;
+		else if (type.equals("date"))
+			sql = VIEWREVIEW_SQL_DATE;
+		else
+			sql = VIEWREVIEW_SQL_RATING;
 		try (Connection connection = db.getConnection();) {
-			try (PreparedStatement statement = connection.prepareStatement(VIEWREVIEW_SQL);){
+			try (PreparedStatement statement = connection.prepareStatement(sql);){
 				statement.setString(1, hotelid);
 				System.out.println(hotelid);
 				ResultSet rs = statement.executeQuery();
@@ -301,7 +314,7 @@ public class DatabaseHandler {
 				while (rs.next())
 				{
 					Review review = new Review(rs.getString(1), rs.getString(2), rs.getString(3), 
-							rs.getString(4), rs.getString(5), rs.getString(6), rs.getBoolean(7), rs.getInt(8));
+							rs.getString(4), rs.getString(5), rs.getString(6), rs.getBoolean(7), rs.getInt(8), rs.getInt(9));
 					list.add(review);
 				}
 				//	System.out.println("XX" + rs.getString(9));
@@ -314,6 +327,74 @@ public class DatabaseHandler {
 			System.out.println("Error while connecting to the database: " + ex);
 		}
 		return status;
+	}
+	
+	public String getReviewLikes(String reviewId)
+	{
+		String result = null;
+		int likes = 0;
+		try (Connection connection = db.getConnection();)
+		{
+			try (PreparedStatement statement = connection.prepareStatement(GETREVIEWLIKES_SQL);)
+			{
+				statement.setString(1, reviewId);
+				ResultSet rs = statement.executeQuery();
+				if (rs.next())
+					likes = rs.getInt(1) + 1;		
+			}
+			try (PreparedStatement statement = connection.prepareStatement(UPDATEREVIEWLIKES_SQL);)
+			{
+				statement.setString(2, reviewId);
+				statement.setInt(1, likes);
+				statement.executeUpdate();		
+			}
+		}	
+		catch (SQLException e)
+		{
+			e.printStackTrace();
+		}	
+		result = "{\"likes\":"+likes+"}";
+		return result;
+	}
+	
+	public String getMapInformation(String hotelid)
+	{
+		String mapInfo = null;
+		try (Connection connection = db.getConnection();)
+		{
+			try (PreparedStatement statement = connection.prepareStatement(GETMAPINFO_SQL);)
+			{
+				statement.setString(1, hotelid);
+				ResultSet rs = statement.executeQuery();
+				if (rs.next())
+					mapInfo = String.valueOf(rs.getDouble(1)) + ":" + String.valueOf(rs.getDouble(2));			
+			}
+		}
+		catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
+		return mapInfo;
+	}
+	
+	public String getHotelAddr(String hotelid)
+	{	
+		String addr = null;
+		try (Connection connection = db.getConnection();)
+		{
+			try (PreparedStatement statement = connection.prepareStatement(GETHOTEL_SQL);)
+			{
+				statement.setString(1, hotelid);
+				ResultSet rs = statement.executeQuery();
+				if (rs.next())
+					addr = rs.getString(1) +":"+String.valueOf(rs.getDouble(2)) + ":" + String.valueOf(rs.getDouble(3));			
+			}
+		}
+		catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
+		return addr;
 	}
 	
 	public Status getHotelDetails(String hotelid, HotelDetails details)
@@ -335,7 +416,7 @@ public class DatabaseHandler {
 						details.setHotel(hotel);
 					}					
 					Review review = new Review(rs.getString(9), rs.getString(10), rs.getString(11), rs.getString(12), 
-							rs.getString(13), rs.getString(14), rs.getBoolean(15), rs.getInt(16));
+							rs.getString(13), rs.getString(14), rs.getBoolean(15), rs.getInt(16), rs.getInt(17));
 					reviews.add(review);
 				}
 				details.setReviews(reviews);

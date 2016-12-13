@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -26,6 +27,7 @@ import org.apache.logging.log4j.Logger;
 
 import cs601.database.Status;
 import cs601.hotelapp.HotelWithRating;
+import cs601.hotelapp.Review;
 
 /**
  * Provides base functionality to all servlets in this example. Original author:
@@ -36,96 +38,7 @@ import cs601.hotelapp.HotelWithRating;
 @SuppressWarnings("serial")
 public class BaseServlet extends HttpServlet {
 
-/*	protected void prepareResponse(String title, HttpServletResponse response) {
-		try {
-			PrintWriter writer = response.getWriter();
-
-			writer.println("<!DOCTYPE html>");
-			writer.println("<html>");
-			writer.println("<head>");
-			writer.println("\t<title>" + title + "</title>");
-			writer.println("</head>");
-			writer.println("<body>");
-		} catch (IOException ex) {
-			System.out.println("IOException while preparing the response: " + ex);
-			return;
-		}
-	}
-
-	protected void finishResponse(HttpServletResponse response) {
-		try {
-			PrintWriter writer = response.getWriter();
-
-			writer.println();
-			writer.println("<p style=\"font-size: 10pt; font-style: italic;\">");
-			writer.println("Last updated at " + getDate());
-			writer.println("</p>");
-
-			writer.println("</body>");
-			writer.println("</html>");
-
-			writer.flush();
-
-			response.setStatus(HttpServletResponse.SC_OK);
-			response.flushBuffer();
-		} catch (IOException ex) {
-			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-			return;
-		}
-	}
-
-	protected String getDate() {
-		String format = "hh:mm a 'on' EEE, MMM dd, yyyy";
-		DateFormat dateFormat = new SimpleDateFormat(format);
-		return dateFormat.format(Calendar.getInstance().getTime());
-	}
-*/
-	/**
-	 * Return a cookie map from the cookies in the request
-	 * 
-	 * @param request
-	 * @return
-	 */
-/*	protected Map<String, String> getCookieMap(HttpServletRequest request) {
-		HashMap<String, String> map = new HashMap<String, String>();
-
-		Cookie[] cookies = request.getCookies();
-
-		if (cookies != null) {
-			for (Cookie cookie : cookies) {
-				map.put(cookie.getName(), cookie.getValue());
-			}
-		}
-
-		return map;
-	}
-*/
-	/**
-	 * Clear cookies
-	 * 
-	 * @param request
-	 * @param response
-	 */
-/*	protected void clearCookies(HttpServletRequest request, HttpServletResponse response) {
-		Cookie[] cookies = request.getCookies();
-
-		if (cookies == null) {
-			return;
-		}
-
-		for (Cookie cookie : cookies) {
-			cookie.setValue("");
-			cookie.setMaxAge(0);
-			response.addCookie(cookie);
-		}
-	}
-
-	protected void clearCookie(String cookieName, HttpServletResponse response) {
-		Cookie cookie = new Cookie(cookieName, null);
-		cookie.setMaxAge(0);
-		response.addCookie(cookie);
-	}
-*/
+	public static Map<String, String> userMap = new HashMap<String, String>();
 	
 	/**
 	 * Return the error message by error name
@@ -214,7 +127,34 @@ public class BaseServlet extends HttpServlet {
 		return sb.toString();
 	}
 	
-	
+	protected String generateJSONString(ArrayList<Review> set, String page)
+	{
+		StringBuffer sb = new StringBuffer();
+		sb.append("{\"numOfPages\":\"" + set.size() / 10 + "\"," + "\"reviews\":[");
+		Iterator<Review> it = set.iterator();
+		int p = Integer.parseInt(page);
+		int i = 0;
+		while (it.hasNext() &&  i < 10 * p)
+		{
+			Review review = it.next();
+			if (i < 10 * (p-1))
+			{
+				i++;
+				continue;
+			}
+			sb.append("{\"author\":\"" + review.getReviewUsername() + "\",");
+			sb.append("\"date\":\"" + review.getReviewDate() + "\",");
+			sb.append("\"rating\":\"" + review.getRating() + "\",");
+			sb.append("\"id\":\"" + review.getReviewId() + "\",");
+			sb.append("\"likes\":\"" + review.getLikes() + "\",");
+			//sb.append("\"city\":\"" + hotel.getHotel().getHotelAddress().getCity() + "\",");
+			sb.append("\"text\":\"" + review.getReviewText() + "\"}," );
+			i++;
+		}
+		sb.deleteCharAt(sb.length() - 1);
+		sb.append("]" + "}");
+		return sb.toString();
+	}
 	
 	
 	

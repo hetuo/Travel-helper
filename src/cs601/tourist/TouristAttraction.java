@@ -1,4 +1,4 @@
-package cs601.hotelapp;
+package cs601.tourist;
 
 /**
  * Class TouristAttraction - a data structure that stores information 
@@ -11,6 +11,8 @@ public class TouristAttraction {
 	private String name;
 	private String address;
 	private Number rating;
+	private double lng;
+	private double lat;
 	
 	/** A default constructor for class TouristAttraction
 	 * @param attractionId
@@ -22,12 +24,14 @@ public class TouristAttraction {
 	 * @param rating
 	 * 		The rating of attraction
 	 * */
-	public TouristAttraction(String attractionId, String name, String address, Number rating)
+	public TouristAttraction(String attractionId, String name, String address, Number rating, double lng, double lat)
 	{
 		this.attractionId = attractionId;
 		this.name = name;
 		this.address = address;
 		this.rating = rating;
+		this.lng = lng;
+		this.lat = lat;
 	}
 	
 	/** A method to get the attractionId
@@ -56,6 +60,16 @@ public class TouristAttraction {
 	public Number getRating()
 	{
 		return rating;
+	}
+	
+	public double getLng()
+	{
+		return lng;
+	}
+	
+	public double getlat()
+	{
+		return lat;
 	}
 		
      /**

@@ -17,6 +17,7 @@ public class Review implements Comparable<Review>{
 	private String date;
 	private boolean recom;
 	private int rating;
+	private int likes;
 
 
 	/** A default constructor for class Review
@@ -38,7 +39,7 @@ public class Review implements Comparable<Review>{
 	 * 		The rating of review
 	 * */
 	public Review(String reviewId, String hotelId, String title, String text, String username, String date, 
-			boolean recom, int rating)
+			boolean recom, int rating, int likes)
 	{
 		this.reviewId = reviewId;
 		this.hotelId = hotelId;
@@ -48,7 +49,7 @@ public class Review implements Comparable<Review>{
 		this.date = date;
 		this.recom = recom;
 		this.rating = rating;
-		
+		this.likes = likes;
 	}
 	
 	/** A method to get if recommend
@@ -171,7 +172,16 @@ public class Review implements Comparable<Review>{
 		username = reviewUsername;
 	}
 	
-
+	public void setLikes(int likes)
+	{
+		this.likes = likes;
+	}
+	
+	public int getLikes()
+	{
+		return this.likes;
+	}
+	
 	/**
 
 	 * Compare reviews based on (a)date((a review is "less" than another review, if it was submitted earlier)

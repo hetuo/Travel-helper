@@ -2,12 +2,16 @@ package cs601.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.StringWriter;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.velocity.Template;
+import org.apache.velocity.VelocityContext;
+import org.apache.velocity.app.VelocityEngine;
 
 import cs601.database.DatabaseHandler;
 import cs601.database.Status;
@@ -29,9 +33,15 @@ public class RegisterServlet extends BaseServlet{
 			String error = request.getParameter("error");
 			if(error != null) {
 				String errorMessage = getStatusMessage(error);
-				out.println("<p style=\"color: red;\">" + errorMessage + "</p>");
+				VelocityContext context = new VelocityContext();
+				VelocityEngine ve = (VelocityEngine)request.getServletContext().getAttribute("templateEngine");
+				Template template = ve.getTemplate("src/cs601/webpage/loginError.html");
+				context.put("error", errorMessage);
+				StringWriter writer = new StringWriter();
+				template.merge(context, writer);
+				out.println(writer.toString());
 			}
-			displayForm(out); 
+			out.print(readWebPage("src/cs601/webpage/register.html"));
 		}
 	
 	/**Override the doPost method to process the request from client about register
@@ -40,8 +50,8 @@ public class RegisterServlet extends BaseServlet{
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 	throws ServletException, IOException{
 		// Get data from the textfields of the html form
-		String newuser = request.getParameter("user");
-		String newpass = request.getParameter("pass");
+		String newuser = request.getParameter("username");
+		String newpass = request.getParameter("password");
 		// sanitize user input to avoid XSS attacks:
 		newuser = StringEscapeUtils.escapeHtml4(newuser);
 		newpass = StringEscapeUtils.escapeHtml4(newpass);
@@ -59,26 +69,5 @@ public class RegisterServlet extends BaseServlet{
 			url = response.encodeRedirectURL(url);
 			response.sendRedirect(url); // send a get request  (redirect to the same path)
 		}
-	}
-	
-	
-	
-	/** Writes and HTML form that shows two textfields and a button to the PrintWriter */
-	private void displayForm(PrintWriter out) {
-		assert out != null;
-
-		out.println("<form action=\"/register\" method=\"post\">"); // the form will be processed by POST
-		out.println("<table border=\"0\">");
-		out.println("\t<tr>");
-		out.println("\t\t<td>Usename:</td>");
-		out.println("\t\t<td><input type=\"text\" name=\"user\" size=\"30\"></td>");
-		out.println("\t</tr>");
-		out.println("\t<tr>");
-		out.println("\t\t<td>Password:</td>");
-		out.println("\t\t<td><input type=\"password\" name=\"pass\" size=\"30\"></td>");
-		out.println("</tr>");
-		out.println("</table>");
-		out.println("<p><input type=\"submit\" value=\"Register\"></p>");
-		out.println("</form>");
 	}
 }

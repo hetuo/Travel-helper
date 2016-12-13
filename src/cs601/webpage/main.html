@@ -109,6 +109,26 @@
     background-position: center;
     background-size: cover;  
 }
+
+
+#imaginary_container{
+    margin-top:10%; /* Don't copy this */
+    margin-bottom:10%
+}
+.stylish-input-group .input-group-addon{
+    background: white !important; 
+}
+.stylish-input-group .form-control{
+	border-right:0; 
+	box-shadow:0 0 0; 
+	border-color:#ccc;
+}
+.stylish-input-group button{
+    border:0;
+    background:transparent;
+}
+
+
   </style>
 
 
@@ -135,14 +155,14 @@ function getHotels(page)
 	    //var responseObj = JSON.parse(text);
 	    numOfPages = parseInt(responseObj.numOfPages);
             updatePages();
-	    var listStr;
+	    var listStr = "";
 	    for (var i = 0; i < responseObj.hotels.length; i++)
 	    {
 		listStr += "<div class=\"col-md-4 column\"><h4>" + responseObj.hotels[i].name;
 		listStr += "</h2><p>" + responseObj.hotels[i].addr + "</p>";
 		listStr += "<p>" + responseObj.hotels[i].city + "</p>";
 		listStr += "<p>" + responseObj.hotels[i].rating + "</p>";
-		listStr += "<p><a class=\"btn\" href=/detail?hotelid="+responseObj.hotels[i].hotelid+">View details </a></p></div>";
+		listStr += "<p><a class=\"btn\" href=/detail?hotelid="+responseObj.hotels[i].hotelid+"&rating="+responseObj.hotels[i].rating+">View details </a></p></div>";
 	    }
 	    document.getElementById("hotels").innerHTML = listStr;
 	}
@@ -174,26 +194,63 @@ function updatePages()
 </head>
 
 <body onload="getHotels(1);">
+	
+
+
 <div class="container">
 
-<h1>My First JavaScript</h1>
 
-<button type="button"
-onclick="document.getElementById('demo').innerHTML = Date()">
-Click me to display Date and Time.</button>
+<nav class="navbar navbar-dark bg-inverse">
+  
+    <ul class="nav navbar-nav">
+      <li><a class="active" style="font-size:20px;font-weight:bold;" href="http://localhost:8080/main">HOME</a></li>
+    </ul>
+#if ($status == "user")    
+	<ul class="nav navbar-nav navbar-right">
+	  <li><a href="/profile">Welcome, $username!</a></li>
+	  <li><a href="/logout">Logout</a></li>
+	</ul>
+ #end
+ #if ($status == "tourist")    
+	<ul class="nav navbar-nav navbar-right">
+	  <li><a href="/login">Login</a></li>
+	  <li><a href="/register">Register</a></li>
+	</ul>
+ #end
+</nav>
 
-<p id="demo"></p>
 
 
-<div align="right">
+
+
+
+
+
+
+
+
+<!--div align="right">
 <a href="#" data-toggle="modal" data-target="#login-modal">Login</a>
 <a href="#" data-toggle="modal" data-target="#register-modal">Register</a>
+</div-->
+
+
+<div class="row">
+	<div class="col-sm-6 col-sm-offset-3">
+		<div id="imaginary_container"> 
+			<div class="input-group stylish-input-group">
+				<input type="text" class="form-control"  placeholder="Search" >
+				<span class="input-group-addon">
+					<button type="submit">
+						<span class="glyphicon glyphicon-search"></span>
+					</button>  
+				</span>
+			</div>
+		</div>
+	</div>
 </div>
 
-<form style="background-color:#EEEEEE;height:200px;">
-    <input type="text" name="hotelname" placeholder="hotel's name">
-    <input type="submit" name="search" value="Search">
-</form>
+
 <div id="hotels" class="row clearfix">
 </div>
 <div id="pages"></div>

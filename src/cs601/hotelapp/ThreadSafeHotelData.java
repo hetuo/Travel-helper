@@ -189,7 +189,7 @@ public class ThreadSafeHotelData{
 		}
 		if (!checkDate(date))
 			return false;
-		Review newReview = new Review(reviewId, hotelId, reviewTitle, review, username, date, isRecom, rating);	
+		Review newReview = new Review(reviewId, hotelId, reviewTitle, review, username, date, isRecom, rating, 0);	
 		lockOfReviewMap.lockWrite();
 		lockOfReviewMap.lockRead();
 		try{
@@ -358,7 +358,7 @@ public class ThreadSafeHotelData{
 				Review reviewInMap = i.next();
 				Review reviewToreturn = new Review(reviewInMap.getReviewId(), reviewInMap.getHotelId(), 
 						reviewInMap.getReviewTitle(), reviewInMap.getReviewText(), reviewInMap.getReviewUsername()
-						, reviewInMap.getReviewDate(), reviewInMap.getRecom(), reviewInMap.getRating());
+						, reviewInMap.getReviewDate(), reviewInMap.getRecom(), reviewInMap.getRating(), 0);
 				reviews.add(reviewToreturn);
 				times += 1;
 			}
@@ -401,7 +401,7 @@ public class ThreadSafeHotelData{
 			{
 				sb.append(arr.get(i).getName());
 				sb.append("; ");
-				sb.append(arr.get(i).getAdderss());
+				sb.append(arr.get(i).getAddress());
 				sb.append(System.lineSeparator());
 			}
 			return sb.toString();

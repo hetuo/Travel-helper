@@ -2,13 +2,18 @@ package cs601.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.StringWriter;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.velocity.Template;
+import org.apache.velocity.VelocityContext;
+import org.apache.velocity.app.VelocityEngine;
 
 import cs601.database.DatabaseHandler;
 import cs601.database.Status;
@@ -30,19 +35,21 @@ public class LoginServlet extends BaseServlet{
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 		throws ServletException, IOException{
 		PrintWriter out = response.getWriter();
-		if (request.getSession().getAttribute("user") != null)
+		String sessionId = (String)request.getSession().getAttribute("user");
+		if (sessionId != null && userMap.get(sessionId) != null)
 			response.sendRedirect("/main");
 		String error = request.getParameter("error");
 		if(error != null) {
 			String errorMessage = getStatusMessage(error);
-			out.println("<p style=\"color: red;\">" + errorMessage + "</p>");
+			VelocityContext context = new VelocityContext();
+			VelocityEngine ve = (VelocityEngine)request.getServletContext().getAttribute("templateEngine");
+			Template template = ve.getTemplate("src/cs601/webpage/loginError.html");
+			context.put("error", errorMessage);
+			StringWriter writer = new StringWriter();
+			template.merge(context, writer);
+			out.println(writer.toString());
 		}
-		//displayForm(out); 
-		//out.println("<script type='text/javascript'>");
-		//out.println("window.open('/home/tuo/workspace/the8USF-project/src/cs601/webpage/login.html')");
-		//out.println("</script>");
-		//response.sendRedirect("login.html");
-		out.print(readWebPage("src/cs601/webpage/login1.html"));
+		out.print(readWebPage("src/cs601/webpage/login.html"));
 	}
 	
 	/**Override the doPost method to process the request from client about login
@@ -50,15 +57,17 @@ public class LoginServlet extends BaseServlet{
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 	throws ServletException, IOException{
-		String newuser = request.getParameter("user");
-		String newpass = request.getParameter("pass");
-		newuser = StringEscapeUtils.escapeHtml4(newuser);
-		newpass = StringEscapeUtils.escapeHtml4(newpass);
-		
+		String name = request.getParameter("username");
+		String passwd = request.getParameter("password");
+		HttpSession session = request.getSession();	
+		name = StringEscapeUtils.escapeHtml4(name);
+		passwd = StringEscapeUtils.escapeHtml4(passwd);
 		// add user's info to the database 
-		Status status = dbhandler.userLogin(newuser, newpass);
+		Status status = dbhandler.userLogin(name, passwd);
 		if(status == Status.OK) { // registration was successful
-			request.getSession().setAttribute("user", newuser);
+			String sessionId = session.getId();
+			session.setAttribute("user", sessionId);
+			userMap.put(sessionId, name);
 			response.sendRedirect("/main");
 		}
 		else { // if something went wrong
@@ -66,29 +75,5 @@ public class LoginServlet extends BaseServlet{
 			url = response.encodeRedirectURL(url);
 			response.sendRedirect(url); // send a get request  (redirect to the same path)
 		}
-	}
-	
-	/** Writes and HTML form that shows two textfields and a button to the PrintWriter
-	 * @param
-	 * 		response
-	 *  */
-	private void displayForm(PrintWriter out) {
-		assert out != null;		
-		out.println("<form action=\"\" method=\"\">");
-		out.println("<table border=\"0\">");
-		out.println("\t<tr>");
-		out.println("\t\t<td>Usename:</td>");
-		out.println("\t\t<td><input type=\"text\" name=\"user\" size=\"30\"></td>");
-		out.println("\t</tr>");
-		out.println("\t<tr>");
-		out.println("\t\t<td>Password:</td>");
-		out.println("\t\t<td><input type=\"password\" name=\"pass\" size=\"30\"></td>");
-		out.println("</tr>");
-		out.println("</table>");
-		out.println("<p><input type=\"submit\" value=\"Login\" onclick=\"javascript:this.form.action='/login';"
-				+ "javascript:this.form.method='post';\"></p>");
-		out.println("<p><input type=\"submit\" value=\"Register\" onclick=\"javascript:this.form.action='/register';"
-				+ "javascript:this.form.method='get';\"></p>");
-		out.println("</form>");
 	}
 }

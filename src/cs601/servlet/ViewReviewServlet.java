@@ -27,18 +27,16 @@ public class ViewReviewServlet extends BaseServlet{
 	 */
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-		throws ServletException, IOException{
-		PrintWriter out = response.getWriter();
-		if (request.getSession().getAttribute("user") == null)
-			response.sendRedirect("/login");
+		throws ServletException, IOException{		
 		String hotelid = request.getParameter("hotelid");
-		if (null == hotelid){
-			out.println("<p>Invalid hotel id</p>");
-			return;
-		}		
-		TreeSet<Review> list = new TreeSet<Review>();
-		dbhandler.viewReview(hotelid, list);
-		displayForm(out, list); 	
+		String type = request.getParameter("type");
+		System.out.println(type);		
+		ArrayList<Review> list = new ArrayList<Review>();
+		dbhandler.viewReview(hotelid, list, type);
+		String result = generateJSONString(list, request.getParameter("page"));
+		result = result.replace("\r\n", "\\r\\n");
+		System.out.println(result);
+		response.getWriter().println(result);	
 	}
 	
 	/*@Override

@@ -1,5 +1,6 @@
 package cs601.driver;
 
+import org.apache.velocity.app.VelocityEngine;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.HandlerList;
@@ -34,7 +35,12 @@ public class JettyHttpServer {
 		context.addServlet(ViewReviewServlet.class, "/review");
 		context.addServlet(AddReviewServlet.class, "/addreview");
 		context.addServlet(HotelDetailsServlet.class, "/detail");
+		context.addServlet(TouristAttractionServlet.class, "/touristAttraction");
 		context.addServlet(DefaultServlet.class, "/");
+		
+		VelocityEngine velocity = new VelocityEngine();
+		velocity.init();
+		context.setAttribute("templateEngine", velocity);
 		server.setHandler(context);
 		
 		/*ResourceHandler handler = new ResourceHandler();

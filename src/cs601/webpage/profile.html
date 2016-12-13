@@ -8,33 +8,11 @@
   <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  
-      <script>
-      function initMap() {
-		  
-        var uluru = {lat: $lat, lng: $lng};
-        var map = new google.maps.Map(document.getElementById('map'), {
-          zoom: 16,
-          center: uluru
-        });
-        var marker = new google.maps.Marker({
-          position: uluru,
-          map: map
-        });
-
-      }
-      
-var curPage = 1;
-var numOfReviews, numOfPages;
-var sortType = "normal";
-function getReviews(page, type)
+ 
+<script>
+function getReviews()
 {
-    curPage = page;
-    if (type == "null")
-		type = "normal";
-	if (type != null)
-		sortType = type;
-    var hotelid = $hotelid;
+
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function()
     {
@@ -55,56 +33,9 @@ function getReviews(page, type)
     };
     xhttp.open("GET", "review?page=" + page + "&hotelid=" + hotelid + "&type=" + sortType, true);
     xhttp.send();
-}
-
-
-function getLikes(reviewId, index)
-{
-	//alert(index);
-	var xhttp = new XMLHttpRequest();
-	xhttp.onreadystatechange = function()
-	{
-		if (this.readyState == 4 && this.status == 200)
-		{
-			var responseObj = JSON.parse(this.responseText);
-			var likes = parseInt(responseObj.likes)
-			var listStr = likes + "&nbsppeople found this review helpful&nbsp&nbsp&nbsp";
-			document.getElementById("label" + index).innerHTML = listStr;
-		}
-	};
-	xhttp.open("POST", "detail", true);
-	xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-	xhttp.send("reviewId=" + reviewId);
-}
-
-
-
-
-function updatePages()
-{
-    var pageStr;
-    if (curPage > numOfPages)
-	curPage = numOfPages;
-    if (curPage < 1)
-	curPage = 1;
-    pageStr = "<span>" + numOfPages + "pages</span><span>" + curPage + "/" + numOfPages + "</span>";
-    if (curPage == 1)
-	pageStr += "<span>first page</span><span>previous page</span>";	
-    else
-	pageStr += "<span><a href=javascript:void(0) onclick=getReviews(1)>first page</a></span><span><a href=javascript:void(0) onclick=getReviews(" + (curPage - 1) + ")>previous page</a></span>";
-    if (curPage == numOfPages)
-	pageStr += "<span>next page</span><span>last page</span>";
-    else
-	pageStr += "<span><a href=javascript:void(0) onclick=getReviews(" + (curPage + 1) + ")>next page</a></span><span><a href=javascript:void(0) onclick=getReviews(" + numOfPages + ")>last page</a></span>";
-    document.getElementById("pages").innerHTML = pageStr;
-}
-
-    </script>
-    <script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCx0h5mo3J7oIwfm5XGLPz14Daq15Ifi-Y&callback=initMap">
-    </script>
-  
-  
+} 
+</script>
+ 
 <style>
 
 /**
@@ -497,58 +428,16 @@ resize:vertical;
 outline:none;
 border: 1px solid #F2F2F2;
 }
-
-
-
-
-
-
 </style>
 </head>
 
-<body onload="getReviews(1, 'normal');">
+<body>
 <div class="container">
 	<div class="hotel-container">
-		<div class="hotel-avatar"><img src="index.jpeg"></img></div>
-	<h1>$name</h1>
-
-	<p>Address: $address</p>
-	<p>Average rating: $rating</p>
-	<span id="href"></span>
-	<span id="tourist"></span>
-	<script>
-		document.getElementById("href").innerHTML = "<a href=\"https://www.expedia.com/h" + $hotelid + ".Hotel-Information\">View it at expedia</a>";
-		document.getElementById("tourist").innerHTML = "<form action=\"touristAttraction\" method=\"get\"><p>Display the tourist attractions in<input type=\"text\" size=\"5\" name=\"radius\"><input type=\"hidden\" name=\"hotelid\" value=\""+$hotelid+"\">miles<button type=\"submit\" class=\"btn btn-secondary\">Submit</button></p></form>"
-	</script>
-
+		<div class="hotel-avatar"><img src="user.jpeg"></img></div>
+	<h1>Welcome, $name !</h1>
 	</div>
 </div>
-
-
-<div class="container">
-    <h3>My Google Maps Demo</h3>
-    <div id="map"></div>
-</div>
-
-
-#if ($status == "user")
-<div class="container">
-		 <br>
- <div class="form-group">
-  <form action="addreview" method="get">
-  <label for="comment">Comment:</label>
-  <textarea class="form-control" rows="5" id="comment"></textarea>
-<label class="radio-inline"><input type="radio" name="optradio">Option 1</label>
-<label class="radio-inline"><input type="radio" name="optradio">Option 2</label>
-<label class="radio-inline"><input type="radio" name="optradio">Option 3</label> 
-<label class="radio-inline"><input type="radio" name="optradio">Option 4</label>
-<label class="radio-inline"><input type="radio" name="optradio">Option 5</label> 
-  </form>
-</div>
-</div>
-#end
-
-
 
 <div class="container">
 
@@ -557,13 +446,8 @@ border: 1px solid #F2F2F2;
 	
 	
 	<br><br><br><br>
-	<select class="selectpicker" name="select" onchange="getReviews(1, this.value)">
-		<option value="null">Default</option>
-		<option value="date">By date</option>
-		<option value="rating">By rating</option>
-	</select>
+
 	<div class="row">
-	<!-- Contenedor Principal -->
     <div class="comments-container">
 		
 

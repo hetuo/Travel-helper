@@ -25,7 +25,11 @@ public class LogoutServlet extends BaseServlet{
 			response.sendRedirect("/login");
 		else
 		{
+			String sessionId = (String)session.getAttribute("user");
+			if (sessionId != null)
+				userMap.remove(sessionId);
 			session.removeAttribute("user");
+			
 			response.sendRedirect("/login");
 		}
 		
