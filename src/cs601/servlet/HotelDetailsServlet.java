@@ -23,6 +23,8 @@ public class HotelDetailsServlet extends BaseServlet{
 
 	private static final DatabaseHandler dbHandler = DatabaseHandler.getInstance();
 	
+	/**Override the doGet method to process the request from client about login
+	 */
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException{
@@ -62,6 +64,8 @@ public class HotelDetailsServlet extends BaseServlet{
 		out.println(writer.toString());
 	}
 	
+	/**Override the dopost method to process the request from client about login
+	 */
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 		throws ServletException, IOException{

@@ -43,7 +43,8 @@ public class EditReviewServlet extends BaseServlet{
 		out.println(writer.toString());
 
 	}
-	
+	/**Override the doPost method to process the request from client about login
+	 */
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 		throws ServletException, IOException{

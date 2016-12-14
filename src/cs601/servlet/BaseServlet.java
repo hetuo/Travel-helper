@@ -79,6 +79,13 @@ public class BaseServlet extends HttpServlet {
 		return status.toString();
 	}
 	
+	/**
+	 * Read the html file to response
+	 * @param path
+	 * 		html file's path
+	 * @return
+	 * 		the content of this html file
+	 */
 	@SuppressWarnings("null")
 	protected String readWebPage(String path)
 	{
@@ -101,6 +108,15 @@ public class BaseServlet extends HttpServlet {
 		return content.toString();
 	}
 	
+	/**
+	 * Generate json format string
+	 * @param set
+	 * 		a set of hotels
+	 * @param page
+	 * 		how many hotels each page
+	 * @return
+	 * 		json format string
+	 */
 	protected String generateJSONString(TreeSet<HotelWithRating> set, String page)
 	{
 		StringBuffer sb = new StringBuffer();
@@ -128,6 +144,13 @@ public class BaseServlet extends HttpServlet {
 		return sb.toString();
 	}
 	
+	/**
+	 * Generate json format string
+	 * @param set
+	 * 		a set of reivews
+	 * @return
+	 * 		json format string
+	 */
 	protected String generateJSONString(ArrayList<Review> set)
 	{
 		StringBuffer sb = new StringBuffer();
@@ -151,6 +174,15 @@ public class BaseServlet extends HttpServlet {
 		return sb.toString();
 	}
 	
+	/**
+	 * Generate json format string
+	 * @param set
+	 * 		a set of hotels
+	 * @param page
+	 * 		how many hotels each page
+	 * @return
+	 * 		json format string
+	 */
 	protected String generateJSONString(ArrayList<Review> set, String page)
 	{
 		StringBuffer sb = new StringBuffer();

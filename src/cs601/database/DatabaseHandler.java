@@ -339,6 +339,14 @@ public class DatabaseHandler {
 		return status;
 	}
 	
+	/**Get reviews which added by certain user
+	 * @param name
+	 * 		the username
+	 * @param liist
+	 * 		data structure to save the reivews
+	 * @return
+	 * 	     the status to update database
+	 */
 	public Status getUserReview(String name, ArrayList<Review> list)
 	{
 		Status status = Status.ERROR;
@@ -366,6 +374,12 @@ public class DatabaseHandler {
 		return status;		
 	}
 	
+	/**Get reviews by reviewId
+	 * @param reviewId
+	 * 		the reviewId
+	 * @return
+	 * 	     the review object
+	 */
 	public Review getReviewById(String reviewId)
 	{
 		Review review = null;
@@ -393,6 +407,14 @@ public class DatabaseHandler {
 		return review;		
 	}
 	
+	/**
+	 * update revies in database
+	 * @param reviewId
+	 * @param title
+	 * @param text
+	 * @param rating
+	 * @param recom
+	 */
 	public void updateReview(String reviewId, String title, String text, String rating, String recom)
 	{
 		
@@ -422,6 +444,12 @@ public class DatabaseHandler {
 
 	}
 	
+	/**
+	 * get certain review's likes number
+	 * @param reviewId
+	 * @return
+	 * 		the review object
+	 */
 	public String getReviewLikes(String reviewId)
 	{
 		String result = null;
@@ -450,6 +478,12 @@ public class DatabaseHandler {
 		return result;
 	}
 	
+	/**
+	 * Get certain hotel's id
+	 * @param name
+	 * @return
+	 * 		hotei id
+	 */
 	public String getHotelByName(String name)
 	{
 		String result = null;
@@ -470,6 +504,12 @@ public class DatabaseHandler {
 		return result;
 	}
 	
+	/**
+	 * Get certain hotel's location infromation
+	 * @param hotelid
+	 * @return
+	 * 		location information
+	 */
 	public String getMapInformation(String hotelid)
 	{
 		String mapInfo = null;
@@ -490,6 +530,11 @@ public class DatabaseHandler {
 		return mapInfo;
 	}
 	
+	
+	/**
+	 * Delete certain review by review id
+	 * @param reviewId
+	 */
 	public void deleteReview(String reviewId)
 	{
 		try (Connection connection = db.getConnection();)
@@ -506,6 +551,12 @@ public class DatabaseHandler {
 		}		
 	}
 	
+	/**
+	 * Get hotel's address
+	 * @param hotelid
+	 * @return
+	 * 		address 
+	 */
 	public String getHotelAddr(String hotelid)
 	{	
 		String addr = null;
@@ -526,6 +577,13 @@ public class DatabaseHandler {
 		return addr;
 	}
 	
+	/**
+	 * Get the hotel's detail information
+	 * @param hotelid
+	 * @param details
+	 * @return
+	 * 		the status query database
+	 */
 	public Status getHotelDetails(String hotelid, HotelWithRating details)
 	{
 		Status status = Status.ERROR;

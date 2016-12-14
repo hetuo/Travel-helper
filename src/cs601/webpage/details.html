@@ -40,6 +40,7 @@ function getReviews(page, type)
     {
 	if (this.readyState == 4 && this.status == 200)
 	{  
+	    
 	    var responseObj = JSON.parse(this.responseText);	 
 	    numOfPages = parseInt(responseObj.numOfPages);
         updatePages();

@@ -52,7 +52,15 @@ public class TouristAttractionServlet extends BaseServlet{
         out.println(writer.toString());
 		
 	}
-
+	
+	/**
+	 * Fetch all the attractions nearby all hotels in certain radius
+	 * Save the message in json file which get from google. The filename
+	 * of these json file are hotelId + result.json.
+	 * 
+	 * @param radiusInMiles
+	 *            The radius which will be used in GET request.
+	 */
 	private ArrayList<TouristAttraction> fetchAttractions(int radiusInMiles, String addrInfo)
 	{
         String pathAndResources = generateQueries(radiusInMiles * 1609, addrInfo); 
@@ -80,6 +88,13 @@ public class TouristAttractionServlet extends BaseServlet{
         return sb.toString();
 	}
 	
+	/**
+	 * Parse the json file get from google maps
+	 * @param jStr
+	 * 		the string need to parse
+	 * @return
+	 * 		json result
+	 */
 	private ArrayList<TouristAttraction> parseAttractionJson(String jStr)
 	{
 		ArrayList<TouristAttraction> list = new ArrayList<TouristAttraction>();
@@ -116,6 +131,16 @@ public class TouristAttractionServlet extends BaseServlet{
 		return list;
 	}
 	
+	/**
+	 * Parse JSON Object to JSON Array, find the the JSON array we need then return it.
+	 * 
+	 * @param jObj
+	 *            The JSON object need to parse
+	 * @param arrName
+	 * 			  The JSON Array's name we need
+	 * @return
+	 * 			  The JSON Array we need
+	 */
     private JSONArray parseJSONFile(JSONObject jObj, String arrName)
     {   
         JSONArray jArray = null;

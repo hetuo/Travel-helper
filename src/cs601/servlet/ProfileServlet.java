@@ -45,6 +45,8 @@ public class ProfileServlet extends BaseServlet{
 
 	}
 	
+	/**Override the dopost method to process the request from client about login
+	 */
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 		throws ServletException, IOException{

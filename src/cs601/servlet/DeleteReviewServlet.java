@@ -42,6 +42,8 @@ public class DeleteReviewServlet extends BaseServlet{
 	}
 	
 	@Override
+	/**Override the dopost method to process the request from client about login
+	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 		throws ServletException, IOException{
 		String sessionId = (String)request.getSession().getAttribute("user");
