@@ -131,6 +131,8 @@ public class BaseServlet extends HttpServlet {
 	protected String generateJSONString(ArrayList<Review> set)
 	{
 		StringBuffer sb = new StringBuffer();
+		if (set.size() == 0)
+			return "{\"reviews\":[]}";
 		sb.append("{\"reviews\":[");
 		Iterator<Review> it = set.iterator();
 		while (it.hasNext())

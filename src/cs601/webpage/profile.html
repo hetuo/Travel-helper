@@ -19,7 +19,7 @@ function getReviews()
 	if (this.readyState == 4 && this.status == 200)
 	{  
 	    var responseObj = JSON.parse(this.responseText);	 
-	    numOfPages = parseInt(responseObj.numOfPages);
+	    //numOfPages = parseInt(responseObj.numOfPages);
 	    var listStr = "";
 	    for (var i = 0; i < responseObj.reviews.length; i++)
 	    {

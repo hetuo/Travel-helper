@@ -27,7 +27,12 @@ public class SearchHotelServlet extends BaseServlet{
 		PrintWriter out = response.getWriter();
 		String name = request.getParameter("name");
 		String hotelid = dbhandler.getHotelByName(name);
-		response.sendRedirect("/detail?hotelid=" + hotelid);
+		if (hotelid == null)
+		{
+			response.getWriter().print(readWebPage("src/cs601/webpage/searchfailed.html"));
+		}
+		else
+			response.sendRedirect("/detail?hotelid=" + hotelid);
 	}
 
 }

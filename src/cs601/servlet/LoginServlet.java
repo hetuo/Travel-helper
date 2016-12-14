@@ -67,7 +67,8 @@ public class LoginServlet extends BaseServlet{
 		//ArrayList<String> list = new ArrayList<String>();
 		ArrayList<String> list = new ArrayList<String>();
 		Status status = dbhandler.userLogin(name, passwd, list);
-		lastTime = list.get(0);
+		if (list.size() != 0)
+			lastTime = list.get(0);
 		if(status == Status.OK) { // registration was successful
 			String sessionId = session.getId();
 			session.setAttribute("user", sessionId);
