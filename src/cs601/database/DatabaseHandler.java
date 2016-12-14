@@ -45,8 +45,9 @@ public class DatabaseHandler {
 	private static final String DELETEREVIEW_SQL = "delete from review where reviewId = ?;";
 	private static final String GETREVIEWBYID_SQL = "select * from review where reviewId = ?;";
 	private static final String GETUSERREVIEW_SQL = "select review.*, hotel.name from review join hotel on review.hotelid = hotel.id where username = ?;";
-    private static final String GETHOTELDETAILS_SQL = "select hotel.*, review.* from hotel left join review"
-    		+ " on hotel.id = review.hotelid where hotel.id = ?;";
+    //private static final String GETHOTELDETAILS_SQL = "select hotel.*, review.* from hotel left join review"
+    //		+ " on hotel.id = review.hotelid where hotel.id = ?;";
+	private static final String GETHOTELDETAILS_SQL = "select * from hotel where id = ?";
     private static final String GETHOTEL_SQL = "select city, longitude, latitude from hotel where id = ?;";
 	/** Used to determine if login_users table exists. */
 	private static final String TABLES_SQL = "SHOW TABLES LIKE 'login_users';";
@@ -525,7 +526,7 @@ public class DatabaseHandler {
 		return addr;
 	}
 	
-	public Status getHotelDetails(String hotelid, HotelDetails details)
+	public Status getHotelDetails(String hotelid, HotelWithRating details)
 	{
 		Status status = Status.ERROR;
 		try (Connection connection = db.getConnection();)
@@ -535,7 +536,16 @@ public class DatabaseHandler {
 				statement.setString(1, hotelid);
 				ResultSet rs = statement.executeQuery();
 				ArrayList<Review> reviews = new ArrayList<Review>();
-				while (rs.next())
+				if (rs.next())
+				{
+					if (details.getHotel() == null)
+					{
+						Hotel hotel = new Hotel(rs.getString(1), rs.getString(2), new Address(rs.getString(3), 
+								rs.getString(4), rs.getString(5), rs.getDouble(7), rs.getDouble(8)), rs.getString(6));
+						details.setHotel(hotel);
+					}
+				}
+				/*while (rs.next())
 				{
 					if (details.getHotel() == null)
 					{
@@ -547,7 +557,7 @@ public class DatabaseHandler {
 							rs.getString(13), rs.getString(14), rs.getBoolean(15), rs.getInt(16), rs.getInt(17));
 					reviews.add(review);
 				}
-				details.setReviews(reviews);
+				details.setReviews(reviews);*/
 				status = Status.OK;
 			}
 		}

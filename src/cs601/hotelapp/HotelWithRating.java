@@ -35,6 +35,11 @@ public class HotelWithRating implements Comparable<HotelWithRating>{
 		return this.hotel;
 	}
 	
+	public void setHotel(Hotel hotel)
+	{
+		this.hotel = hotel;
+	}
+	
 	/**
 	 * Return hotel rating
 	 * @return

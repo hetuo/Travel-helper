@@ -16,6 +16,7 @@ import org.apache.velocity.app.VelocityEngine;
 import cs601.database.DatabaseHandler;
 import cs601.database.Status;
 import cs601.hotelapp.HotelDetails;
+import cs601.hotelapp.HotelWithRating;
 
 @SuppressWarnings("serial")
 public class HotelDetailsServlet extends BaseServlet{
@@ -31,7 +32,8 @@ public class HotelDetailsServlet extends BaseServlet{
 		String sessionId = (String)session.getAttribute("user");
 		session.setAttribute("hotelid", hotelid);
 			
-		HotelDetails details = new HotelDetails(null, null);
+		//HotelDetails details = new HotelDetails(null, null);
+		HotelWithRating details = new HotelWithRating(null, 0);
 		dbHandler.getHotelDetails(hotelid, details);
 		VelocityContext context = new VelocityContext();
 		VelocityEngine ve = (VelocityEngine)request.getServletContext().getAttribute("templateEngine");
